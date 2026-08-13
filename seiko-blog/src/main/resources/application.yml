@@ -1,0 +1,131 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: seiko-blog
+
+  # 文件上传限制
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  # Jackson 时区配置
+  Jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  # mail 配置（用户名/授权码通过环境变量注入，或复制为被 .gitignore 忽略的 application-local.yml）
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+
+# 服务器配置
+server:
+  port: 1001
+  servlet:
+    context-path: /
+
+# 日志配置
+logging:
+  level:
+    com.seiko.blog: INFO
+    org.springframework.web: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+
+# Sa-Token 配置
+sa-token:
+  # Token 名称
+  token-name: token
+  # Token 有效期（单位：秒）默认30天，-1代表永不过期
+  timeout: 43200
+  # Token 最低活跃频率（单位：秒），如果 Token 超过此时间没有访问系统就会被冻结，默认-1代表不限制，永不冻结
+  active-timeout: -1
+  # 是否允许同一账号多地登录
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个 Token
+  is-share: true
+  # Token 风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.seiko.blog.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# spring doc-openapi 配置
+spring doc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+blog:
+  # 登录安全配置
+  security:
+    login-rate-limit:
+      enabled: true
+      # 单个账号 5 分钟内最多失败 3 次
+      max-attempts: 3
+      # 单个 IP 5 分钟内最多失败 5 次
+      ip-max-attempts: 5
+      # 计数窗口：5 分钟
+      window-seconds: 300
+      # 触发限制后锁定：15 分钟
+      lock-seconds: 900
+
+    # 邮箱验证码配置
+    email-code:
+      enabled: true
+      # 验证码长度
+      code-length: 6
+      # 验证码有效期：5 分钟
+      code-ttl-seconds: 300
+      # 同一邮箱重发冷却：60 秒
+      resend-cooldown-seconds: 60
+      # 同一 IP 每小时最多发送次数
+      ip-max-sends-per-hour: 3
+      # IP 超限锁定：1 小时
+      ip-lock-seconds: 3600
+      # 邮件发件人显示名称
+      sender-name: Seiko
+      # 邮件主题
+      subject: Seiko 邮箱验证码
+
+  # 文件上传配置
+  upload:
+    # 本地存储目录，支持相对路径或绝对路径
+    path: D:\blog\uploads
+    # 浏览器访问路径前缀
+    url-prefix: /uploads
+    # 单个文件最大限制，单位字节，默认 10MB
+    max-size: 10485760
+    # 允许上传的文件 MIME 类型
+    allowed-types:
+      - image/jpeg
+      - image/png
+      - image/webp
+      - image/gif

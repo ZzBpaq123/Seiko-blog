@@ -1,0 +1,40 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: JDBC:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/seiko_blog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  # Redis 配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:0}
+      password: ${REDIS_PASSWORD:}
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 50
+          max-idle: 20
+          min-idle: 5
+          max-wait: 3000ms
+
+# 日志级别
+logging:
+  level:
+    com.seiko.blog: WARN
+    root: WARN
+  file:
+    name: logs/seiko-blog.log
