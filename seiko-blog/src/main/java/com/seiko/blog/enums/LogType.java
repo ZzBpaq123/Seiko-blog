@@ -1,10 +1,12 @@
 package com.seiko.blog.enums;
 
 import com.seiko.common.enums.BaseEnum;
+import lombok.Getter;
 
 /**
  * 日志类型枚举
  */
+@Getter
 public enum LogType implements BaseEnum<String> {
 
     OPERATION("operation", "操作日志"),
@@ -18,14 +20,6 @@ public enum LogType implements BaseEnum<String> {
     LogType(String value, String description) {
         this.value = value;
         this.description = description;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public static LogType fromValue(String value) {

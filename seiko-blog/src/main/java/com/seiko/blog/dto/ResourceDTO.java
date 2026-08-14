@@ -11,6 +11,10 @@ import lombok.Data;
 @Schema(description = "资源创建/更新请求")
 public class ResourceDTO {
 
+    @NotBlank(message = "资源图标不能为空")
+    @Schema(description = "资源图标")
+    private String resourceIcon;
+
     @NotBlank(message = "资源名称不能为空")
     @Schema(description = "资源名称")
     private String resourceName;

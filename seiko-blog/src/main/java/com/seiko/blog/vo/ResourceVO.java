@@ -16,6 +16,9 @@ public class ResourceVO {
     @Schema(description = "资源ID")
     private Long id;
 
+    @Schema(description = "资源图标")
+    private String resourceIcon;
+
     @Schema(description = "资源名称")
     private String resourceName;
 

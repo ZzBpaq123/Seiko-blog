@@ -1,10 +1,12 @@
 package com.seiko.blog.enums;
 
 import com.seiko.common.enums.BaseEnum;
+import lombok.Getter;
 
 /**
  * 用户状态枚举
  */
+@Getter
 public enum UserStatus implements BaseEnum<String> {
 
     ACTIVE("active", "激活"),
@@ -16,14 +18,6 @@ public enum UserStatus implements BaseEnum<String> {
     UserStatus(String value, String description) {
         this.value = value;
         this.description = description;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public static UserStatus fromValue(String value) {

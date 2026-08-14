@@ -1,10 +1,12 @@
 package com.seiko.blog.enums;
 
 import com.seiko.common.enums.BaseEnum;
+import lombok.Getter;
 
 /**
  * 用户角色枚举
  */
+@Getter
 public enum UserRole implements BaseEnum<String> {
 
     ADMIN("admin", "管理员"),
@@ -16,14 +18,6 @@ public enum UserRole implements BaseEnum<String> {
     UserRole(String value, String description) {
         this.value = value;
         this.description = description;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public static UserRole fromValue(String value) {

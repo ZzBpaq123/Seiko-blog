@@ -1,10 +1,12 @@
 package com.seiko.blog.enums;
 
 import com.seiko.common.enums.BaseEnum;
+import lombok.Getter;
 
 /**
  * 足迹类型枚举
  */
+@Getter
 public enum FootprintType implements BaseEnum<String> {
 
     DOMESTIC("domestic", "国内"),
@@ -16,14 +18,6 @@ public enum FootprintType implements BaseEnum<String> {
     FootprintType(String value, String description) {
         this.value = value;
         this.description = description;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public static FootprintType fromValue(String value) {

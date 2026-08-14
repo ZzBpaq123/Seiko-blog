@@ -1,10 +1,12 @@
 package com.seiko.blog.enums;
 
 import com.seiko.common.enums.BaseEnum;
+import lombok.Getter;
 
 /**
  * 文章发布状态枚举
  */
+@Getter
 public enum PostStatus implements BaseEnum<Boolean> {
 
     DRAFT(false, "草稿"),
@@ -16,14 +18,6 @@ public enum PostStatus implements BaseEnum<Boolean> {
     PostStatus(Boolean value, String description) {
         this.value = value;
         this.description = description;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public static PostStatus fromValue(Boolean value) {

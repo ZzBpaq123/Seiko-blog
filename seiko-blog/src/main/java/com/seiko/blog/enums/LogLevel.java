@@ -1,10 +1,12 @@
 package com.seiko.blog.enums;
 
 import com.seiko.common.enums.BaseEnum;
+import lombok.Getter;
 
 /**
  * 日志级别枚举
  */
+@Getter
 public enum LogLevel implements BaseEnum<String> {
 
     DEBUG("DEBUG", "调试"),
@@ -18,14 +20,6 @@ public enum LogLevel implements BaseEnum<String> {
     LogLevel(String value, String description) {
         this.value = value;
         this.description = description;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public static LogLevel fromValue(String value) {
