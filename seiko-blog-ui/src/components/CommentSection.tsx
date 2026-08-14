@@ -190,6 +190,44 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
+              昵称
+            </label>
+            <input
+              type="text"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              placeholder="你的昵称"
+              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-300 dark:border-zinc-700 dark:bg-zinc-950"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
+              头像颜色
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {AVATAR_COLORS.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  onClick={() => setAvatarColor(color)}
+                  className={`h-7 w-7 rounded-full border-2 transition-transform ${
+                    avatarColor === color
+                      ? "border-zinc-900 scale-110 dark:border-white"
+                      : "border-transparent"
+                  }`}
+                  style={{ backgroundColor: color }}
+                  aria-label={`选择头像颜色 ${color}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
               邮箱
             </label>
             <input
@@ -204,42 +242,28 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
-              昵称
-            </label>
-            <input
-              type="text"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              placeholder="你的昵称"
-              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-300 dark:border-zinc-700 dark:bg-zinc-950"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-3">
-          <div className="flex-1">
-            <label className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
               验证码
             </label>
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="6 位验证码"
-              maxLength={6}
-              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-300 dark:border-zinc-700 dark:bg-zinc-950"
-              required
-            />
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="6 位验证码"
+                maxLength={6}
+                className="flex-1 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-300 dark:border-zinc-700 dark:bg-zinc-950"
+                required
+              />
+              <button
+                type="button"
+                onClick={handleSendCode}
+                disabled={sendingCode || countdown > 0}
+                className="self-end rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-600 disabled:bg-zinc-300 dark:disabled:bg-zinc-700"
+              >
+                {countdown > 0 ? `${countdown}s 后重发` : "获取验证码"}
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={handleSendCode}
-            disabled={sendingCode || countdown > 0}
-            className="self-end rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-600 disabled:bg-zinc-300 dark:disabled:bg-zinc-700"
-          >
-            {countdown > 0 ? `${countdown}s 后重发` : "获取验证码"}
-          </button>
         </div>
 
         <div>
@@ -254,28 +278,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             className="w-full resize-none rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-300 dark:border-zinc-700 dark:bg-zinc-950"
             required
           />
-        </div>
-
-        <div>
-          <label className="mb-2 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
-            头像颜色
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {AVATAR_COLORS.map((color) => (
-              <button
-                key={color}
-                type="button"
-                onClick={() => setAvatarColor(color)}
-                className={`h-7 w-7 rounded-full border-2 transition-transform ${
-                  avatarColor === color
-                    ? "border-zinc-900 scale-110 dark:border-white"
-                    : "border-transparent"
-                }`}
-                style={{ backgroundColor: color }}
-                aria-label={`选择头像颜色 ${color}`}
-              />
-            ))}
-          </div>
         </div>
 
         {formError && (
