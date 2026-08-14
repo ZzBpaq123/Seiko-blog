@@ -54,14 +54,18 @@ public class StpInterfaceImpl implements StpInterface {
     }
 
     private Long parseLoginId(Object loginId) {
-        if (loginId == null) {
-            return null;
-        }
-        if (loginId instanceof Long) {
-            return (Long) loginId;
-        }
-        if (loginId instanceof Number) {
-            return ((Number) loginId).longValue();
+        switch (loginId) {
+            case null -> {
+                return null;
+            }
+            case Long l -> {
+                return l;
+            }
+            case Number number -> {
+                return number.longValue();
+            }
+            default -> {
+            }
         }
         try {
             return Long.valueOf(loginId.toString());

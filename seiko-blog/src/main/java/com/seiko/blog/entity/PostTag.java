@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @TableName("seiko_post_tags")
 public class PostTag implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

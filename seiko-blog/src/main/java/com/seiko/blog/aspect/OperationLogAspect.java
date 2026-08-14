@@ -213,7 +213,7 @@ public class OperationLogAspect {
         try {
             // 单个参数直接序列化对象本身，避免外层包一层数组
             if (validArgs.size() == 1) {
-                return JSONUtil.toJsonStr(validArgs.get(0));
+                return JSONUtil.toJsonStr(validArgs.getFirst());
             }
             // 多个参数序列化为数组
             return JSONUtil.toJsonStr(validArgs);

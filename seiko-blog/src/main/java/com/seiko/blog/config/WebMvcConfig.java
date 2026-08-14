@@ -3,6 +3,7 @@ package com.seiko.blog.config;
 import com.seiko.blog.interceptor.LogInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -32,7 +33,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         Path uploadPath = Paths.get(uploadProperties.getPath()).toAbsolutePath().normalize();
         String location = uploadPath.toUri().toString();
         if (!location.endsWith("/")) {

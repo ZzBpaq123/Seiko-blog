@@ -7,6 +7,7 @@ import com.seiko.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.util.Date;
 
 /**
@@ -17,6 +18,7 @@ import java.util.Date;
 @TableName("seiko_posts")
 public class Post extends BaseEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

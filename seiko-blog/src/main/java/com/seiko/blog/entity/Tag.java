@@ -5,6 +5,8 @@ import com.seiko.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * 标签表实体
  */
@@ -13,6 +15,7 @@ import lombok.EqualsAndHashCode;
 @TableName("seiko_tags")
 public class Tag extends BaseEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

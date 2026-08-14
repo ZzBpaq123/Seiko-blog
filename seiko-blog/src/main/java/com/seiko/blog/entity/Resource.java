@@ -6,6 +6,8 @@ import com.seiko.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * 资源目录表实体
  */
@@ -14,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @TableName("seiko_resources")
 public class Resource extends BaseEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

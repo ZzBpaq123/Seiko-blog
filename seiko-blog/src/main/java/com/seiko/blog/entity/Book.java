@@ -6,6 +6,8 @@ import com.seiko.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * 书籍实体类
  */
@@ -14,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @TableName("seiko_books")
 public class Book extends BaseEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

@@ -6,6 +6,7 @@ import com.seiko.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 @TableName("seiko_movies")
 public class Movie extends BaseEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
