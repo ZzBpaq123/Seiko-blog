@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getCommentsByPostId, createComment } from "@/api/comment";
 import { sendEmailCode } from "@/api/code";
 import type { CommentVO } from "@/api/types";
+import { useToast } from "@/components/ui/Toast";
 
 interface CommentSectionProps {
   postId: number;
@@ -45,8 +46,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [sendingCode, setSendingCode] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [formSuccess, setFormSuccess] = useState("");
+  const { success, warning, error } = useToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -78,19 +78,18 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   const handleSendCode = async () => {
     if (!email) {
-      setFormError("请输入邮箱");
+      warning("请输入邮箱");
       return;
     }
     if (countdown > 0) return;
 
     setSendingCode(true);
-    setFormError("");
     try {
       await sendEmailCode({ email });
       setCountdown(60);
-      setFormSuccess("验证码已发送，请查收邮箱");
+      success("验证码已发送，请查收邮箱");
     } catch {
-      setFormError("验证码发送失败，请检查邮箱或稍后重试");
+      error("验证码发送失败，请检查邮箱或稍后重试");
     } finally {
       setSendingCode(false);
     }
@@ -99,13 +98,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !code || !author || !content) {
-      setFormError("请填写完整信息");
+      warning("请填写完整信息");
       return;
     }
 
     setSubmitting(true);
-    setFormError("");
-    setFormSuccess("");
 
     try {
       const newComment = await createComment({
@@ -122,10 +119,10 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       }
       setCode("");
       setContent("");
-      setFormSuccess("评论发表成功");
+      success("评论发表成功");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "评论发表失败";
-      setFormError(message);
+      error(message);
     } finally {
       setSubmitting(false);
     }
@@ -279,13 +276,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             required
           />
         </div>
-
-        {formError && (
-          <p className="text-sm text-rose-500">{formError}</p>
-        )}
-        {formSuccess && (
-          <p className="text-sm text-emerald-500">{formSuccess}</p>
-        )}
 
         <button
           type="submit"

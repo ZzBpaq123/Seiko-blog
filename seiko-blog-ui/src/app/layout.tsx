@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, ZCOOL_KuaiLe } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ToastProvider } from "@/components/ui/Toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${zcoolKuaiLe.variable} antialiased min-h-screen flex flex-col`}
       >
         <Header />
-        <main className="flex-1 pt-14 pb-16">{children}</main>
+        <ToastProvider>
+          <main className="flex-1 pt-14 pb-16">{children}</main>
+        </ToastProvider>
         <Footer />
       </body>
     </html>
