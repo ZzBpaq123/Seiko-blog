@@ -9,7 +9,7 @@ Seiko Blog 是一个基于现代化技术栈开发的个人博客管理系统，
 采用前后端分离架构：
 
 - **后端**（`seiko-blog/` + `seiko-common/`）：Spring Boot 3.4 REST API，端口 `1001`
-- **公开前台**（`seiko-blog-ui/`）：Next.js 16（App Router），数据驱动页面采用 SSG/ISR（`revalidate = 300`），访问 `/api/blog/**`，端口 `3000`
+- **公开前台**（`seiko-blog-ui/`）：Next.js 16（App Router），数据驱动页面采用 SSG/ISR（`revalidate = 3600`，1 小时），访问 `/api/blog/**`，端口 `3000`
 - **后台管理**（`seiko-manage/`）：Next.js 16 客户端渲染的 CRUD 控制台，访问 `/api/manage/**`，端口 `3001`
 - **数据库脚本**（`sql/seiko_blog.sql`）、**开发文档**（`docs/`）
 

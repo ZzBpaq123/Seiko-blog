@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "记录走过的每一个角落",
 };
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export default async function FootprintPage() {
   const footprints = await getFootprintList().catch(() => []);

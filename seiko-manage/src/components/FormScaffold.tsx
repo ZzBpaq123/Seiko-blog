@@ -14,8 +14,6 @@ interface FormScaffoldProps {
   onSubmit: (e: React.FormEvent) => void;
   /** 编辑页取数中（新建页不传） */
   loading?: boolean;
-  /** 编辑页取数失败时的整页错误信息（页面无内容可展示时使用） */
-  loadError?: string | null;
   /** 保存按钮左侧的额外操作（如「立即发布」开关） */
   headerExtra?: ReactNode;
   children: ReactNode;
@@ -23,7 +21,7 @@ interface FormScaffoldProps {
 
 /**
  * 新建 / 编辑表单的统一外壳：返回箭头 + 标题 + 保存按钮，
- * 以及编辑页的加载态与取数失败整页错误。提交类错误统一走全局 Toast，不再内联横幅。
+ * 以及编辑页的加载态。所有错误统一走全局 Toast。
  */
 export default function FormScaffold({
   title,
@@ -31,26 +29,11 @@ export default function FormScaffold({
   submitting,
   onSubmit,
   loading,
-  loadError,
   headerExtra,
   children,
 }: FormScaffoldProps) {
   if (loading) {
     return <PageLoading />;
-  }
-
-  if (loadError) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-3">
-          <Link href={backHref} className="p-2 rounded-lg hover:bg-gray-100 text-gray-500" title="返回">
-            <ArrowLeft size={18} />
-          </Link>
-          <h1 className="text-2xl font-bold text-foreground">{title}</h1>
-        </div>
-        <div className="card border-red-200 bg-red-50 text-red-600 py-6 text-center">{loadError}</div>
-      </div>
-    );
   }
 
   return (

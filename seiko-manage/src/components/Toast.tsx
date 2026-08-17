@@ -40,14 +40,14 @@ export default function Toast() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]">
+    <div className="fixed top-4 right-4 z-100 flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]">
       {toasts.map((t) => (
         <div
           key={t.id}
           className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 shadow-lg animate-toast-in"
         >
           <AlertCircle size={18} className="mt-0.5 shrink-0 text-red-600" />
-          <p className="flex-1 text-sm text-red-700 break-words">{t.message}</p>
+          <p className="flex-1 text-sm text-red-700 wrap-break-word">{t.message}</p>
           <button
             type="button"
             onClick={() => remove(t.id)}

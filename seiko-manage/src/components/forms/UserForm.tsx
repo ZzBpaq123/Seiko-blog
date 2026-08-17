@@ -30,7 +30,7 @@ export default function UserForm({ mode }: { mode: "new" | "edit" }) {
   const [userStatus, setUserStatus] = useState("active");
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<UserVO>({
+  const { loading } = useEntityLoad<UserVO>({
     enabled: isEdit,
     id,
     loader: getUserById,

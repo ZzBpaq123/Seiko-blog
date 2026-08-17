@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { notifyError } from "@/utils/toast";
 
 interface UseEntityLoadOptions<T> {
   /** 是否为编辑模式（需要加载已有数据）；新建模式传 false */
@@ -28,7 +29,6 @@ export function useEntityLoad<T>({
   loadFailMessage = "加载失败",
 }: UseEntityLoadOptions<T>) {
   const [loading, setLoading] = useState(enabled);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
@@ -37,7 +37,7 @@ export function useEntityLoad<T>({
     if (!id || Number.isNaN(id)) {
       Promise.resolve().then(() => {
         if (cancelled) return;
-        setLoadError(invalidIdMessage);
+        notifyError(invalidIdMessage);
         setLoading(false);
       });
       return () => {
@@ -48,14 +48,13 @@ export function useEntityLoad<T>({
     Promise.resolve()
       .then(() => {
         setLoading(true);
-        setLoadError(null);
         return loader(id);
       })
       .then((data) => {
         if (!cancelled) onLoaded(data);
       })
       .catch((err) => {
-        if (!cancelled) setLoadError(err instanceof Error ? err.message : loadFailMessage);
+        if (!cancelled) notifyError(err instanceof Error ? err.message : loadFailMessage);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -67,5 +66,5 @@ export function useEntityLoad<T>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, id]);
 
-  return { loading, loadError };
+  return { loading };
 }

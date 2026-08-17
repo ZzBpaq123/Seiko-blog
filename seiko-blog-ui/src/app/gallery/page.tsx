@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "记录生活中的美好瞬间",
 };
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export default async function GalleryPage() {
   const albums = await getAlbumList().catch(() => []);

@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   description: "Seiko 的个人博客首页，分享技术、生活与思考",
 };
 
-// ISR：整页缓存 5 分钟，与后端阅读量刷库周期对齐
-export const revalidate = 300;
+// ISR：整页缓存 1 小时，与后端阅读量刷库周期对齐
+export const revalidate = 3600;
 
 const PAGE_SIZE = 6;
 const SITE_START_DATE = "2026-01-01";

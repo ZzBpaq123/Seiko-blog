@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "浏览所有博客文章",
 };
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 const PAGE_SIZE = 8;
 

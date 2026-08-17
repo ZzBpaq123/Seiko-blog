@@ -15,8 +15,8 @@ interface BlogPostPageProps {
   }>;
 }
 
-// ISR：文章页按需渲染后缓存 5 分钟，新文章最长 5 分钟内可见
-export const revalidate = 300;
+// ISR：文章页按需渲染后缓存 1 小时，新文章最长 1 小时内可见
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

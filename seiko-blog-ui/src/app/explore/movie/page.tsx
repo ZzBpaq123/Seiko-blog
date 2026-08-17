@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "探索影视的世界",
 };
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export default async function MoviePage() {
   const movies = await getMovieList().catch(() => []);
