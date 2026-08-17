@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.Result;
 import com.seiko.common.result.ResultCode;
@@ -38,6 +39,7 @@ public class UserController {
      * @param loginDTO 登录信息（用户名、密码）
      * @return 登录结果
      */
+    @OperationLog(logType = "login", action = "用户登录")
     @Operation(summary = "用户登录", description = "用户登录获取Token")
     @Parameters({
         @Parameter(name = "username", description = "用户名", required = true),
@@ -64,6 +66,7 @@ public class UserController {
      * @param registerDTO 注册信息（用户名、密码、昵称、邮箱）
      * @return 注册结果
      */
+    @OperationLog(action = "用户注册")
     @Operation(summary = "用户注册", description = "新用户注册并自动登录")
     @Parameters({
         @Parameter(name = "username", description = "用户名", required = true),
@@ -80,6 +83,7 @@ public class UserController {
     /**
      * 用户登出
      */
+    @OperationLog(logType = "login", action = "用户登出")
     @Operation(summary = "用户登出", description = "退出当前登录状态")
     @PostMapping("/logout")
     public Result<Void> logout() {
@@ -90,6 +94,7 @@ public class UserController {
     /**
      * 获取当前用户信息
      */
+    @OperationLog(action = "获取当前用户信息")
     @Operation(summary = "获取当前用户信息", description = "获取已登录用户的详细信息")
     @GetMapping("/info")
     public Result<UserVO> getCurrentUser() {
@@ -100,6 +105,7 @@ public class UserController {
     /**
      * 检查登录状态
      */
+    @OperationLog(action = "检查登录状态")
     @Operation(summary = "检查登录状态", description = "检查当前请求是否已登录")
     @GetMapping("/check")
     public Result<Boolean> isLogin() {

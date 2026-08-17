@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.TagDTO;
 import com.seiko.blog.service.TagService;
@@ -26,6 +27,7 @@ public class TagManageController {
     /**
      * 查询标签列表
      */
+    @OperationLog(action = "查询标签列表")
     @Operation(summary = "查询标签列表", description = "分页查询标签列表，支持名称/标识模糊查询")
     @GetMapping("/list")
     public Result<Page<TagVO>> getTagList(
@@ -38,6 +40,7 @@ public class TagManageController {
     /**
      * 创建标签
      */
+    @OperationLog(action = "创建标签")
     @Operation(summary = "创建标签", description = "新建标签，slug 为空时根据名称自动生成")
     @PostMapping
     public Result<Long> createTag(@Valid @RequestBody TagDTO dto) {
@@ -47,6 +50,7 @@ public class TagManageController {
     /**
      * 更新标签
      */
+    @OperationLog(action = "更新标签")
     @Operation(summary = "更新标签", description = "根据ID更新标签")
     @PutMapping("/{id}")
     public Result<Boolean> updateTag(
@@ -58,6 +62,7 @@ public class TagManageController {
     /**
      * 查询标签详情
      */
+    @OperationLog(action = "查询标签详情")
     @Operation(summary = "查询标签详情", description = "根据ID查询标签详情")
     @GetMapping("/{id}")
     public Result<TagVO> getTagById(
@@ -68,6 +73,7 @@ public class TagManageController {
     /**
      * 删除标签
      */
+    @OperationLog(action = "删除标签")
     @Operation(summary = "删除标签", description = "根据ID删除标签，已关联文章的标签不允许删除")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteTag(

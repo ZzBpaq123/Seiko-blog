@@ -1,5 +1,6 @@
 package com.seiko.blog.controller.manage;
 
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.config.UploadConfig;
 import com.seiko.blog.service.FileStorageService;
@@ -33,6 +34,7 @@ public class UploadController {
      * @param file 图片文件
      * @return 上传结果，包含可访问的完整 URL
      */
+    @OperationLog(action = "上传图片")
     @Operation(summary = "上传图片", description = "上传图片到本地服务器，返回可浏览器访问的完整 URL")
     @Parameter(name = "file", description = "图片文件", required = true)
     @PostMapping("/image")

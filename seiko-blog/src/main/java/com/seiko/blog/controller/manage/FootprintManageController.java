@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.FootprintDTO;
 import com.seiko.blog.service.FootprintService;
@@ -26,6 +27,7 @@ public class FootprintManageController {
     /**
      * 查询足迹列表
      */
+    @OperationLog(action = "查询足迹列表")
     @Operation(summary = "查询足迹列表", description = "分页查询足迹列表，支持类型和城市模糊查询")
     @GetMapping("/list")
     public Result<Page<FootprintVO>> getFootprintList(
@@ -39,6 +41,7 @@ public class FootprintManageController {
     /**
      * 创建足迹
      */
+    @OperationLog(action = "创建足迹")
     @Operation(summary = "创建足迹", description = "新建足迹")
     @PostMapping
     public Result<Long> createFootprint(@Valid @RequestBody FootprintDTO dto) {
@@ -48,6 +51,7 @@ public class FootprintManageController {
     /**
      * 更新足迹
      */
+    @OperationLog(action = "更新足迹")
     @Operation(summary = "更新足迹", description = "根据ID更新足迹")
     @PutMapping("/{id}")
     public Result<Boolean> updateFootprint(
@@ -59,6 +63,7 @@ public class FootprintManageController {
     /**
      * 查询足迹详情
      */
+    @OperationLog(action = "查询足迹详情")
     @Operation(summary = "查询足迹详情", description = "根据ID查询足迹详情")
     @GetMapping("/{id}")
     public Result<FootprintVO> getFootprintById(
@@ -69,6 +74,7 @@ public class FootprintManageController {
     /**
      * 删除足迹
      */
+    @OperationLog(action = "删除足迹")
     @Operation(summary = "删除足迹", description = "根据ID删除足迹")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteFootprint(

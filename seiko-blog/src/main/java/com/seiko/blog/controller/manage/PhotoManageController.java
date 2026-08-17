@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.PhotoDTO;
 import com.seiko.blog.service.PhotoService;
@@ -28,6 +29,7 @@ public class PhotoManageController {
     /**
      * 查询照片列表
      */
+    @OperationLog(action = "查询照片列表")
     @Operation(summary = "查询照片列表", description = "分页查询照片列表，支持相册ID和拍摄地点模糊查询")
     @GetMapping("/list")
     public Result<Page<PhotoVO>> getPhotoList(
@@ -41,6 +43,7 @@ public class PhotoManageController {
     /**
      * 创建照片
      */
+    @OperationLog(action = "创建照片")
     @Operation(summary = "创建照片", description = "向相册中新增照片")
     @PostMapping
     public Result<Long> createPhoto(@Valid @RequestBody PhotoDTO dto) {
@@ -50,6 +53,7 @@ public class PhotoManageController {
     /**
      * 批量创建照片
      */
+    @OperationLog(action = "批量创建照片")
     @Operation(summary = "批量创建照片", description = "向相册中批量新增照片")
     @PostMapping("/batch")
     public Result<Boolean> batchCreatePhotos(@RequestBody @Valid List<PhotoDTO> dtoList) {
@@ -59,6 +63,7 @@ public class PhotoManageController {
     /**
      * 更新照片
      */
+    @OperationLog(action = "更新照片")
     @Operation(summary = "更新照片", description = "根据ID更新照片")
     @PutMapping("/{id}")
     public Result<Boolean> updatePhoto(
@@ -70,6 +75,7 @@ public class PhotoManageController {
     /**
      * 查询照片详情
      */
+    @OperationLog(action = "查询照片详情")
     @Operation(summary = "查询照片详情", description = "根据ID查询照片详情")
     @GetMapping("/{id}")
     public Result<PhotoVO> getPhotoById(
@@ -80,6 +86,7 @@ public class PhotoManageController {
     /**
      * 删除照片
      */
+    @OperationLog(action = "删除照片")
     @Operation(summary = "删除照片", description = "根据ID删除照片")
     @DeleteMapping("/{id}")
     public Result<Boolean> deletePhoto(

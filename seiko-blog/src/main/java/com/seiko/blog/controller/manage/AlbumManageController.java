@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.AlbumDTO;
 import com.seiko.blog.service.AlbumService;
@@ -26,6 +27,7 @@ public class AlbumManageController {
     /**
      * 查询相册列表
      */
+    @OperationLog(action = "查询相册列表")
     @Operation(summary = "查询相册列表", description = "分页查询相册列表，支持相册名称模糊查询")
     @GetMapping("/list")
     public Result<Page<AlbumVO>> getAlbumList(
@@ -38,6 +40,7 @@ public class AlbumManageController {
     /**
      * 创建相册
      */
+    @OperationLog(action = "创建相册")
     @Operation(summary = "创建相册", description = "新建相册")
     @PostMapping
     public Result<Long> createAlbum(@Valid @RequestBody AlbumDTO dto) {
@@ -47,6 +50,7 @@ public class AlbumManageController {
     /**
      * 更新相册
      */
+    @OperationLog(action = "更新相册")
     @Operation(summary = "更新相册", description = "根据ID更新相册")
     @PutMapping("/{id}")
     public Result<Boolean> updateAlbum(
@@ -58,6 +62,7 @@ public class AlbumManageController {
     /**
      * 查询相册详情
      */
+    @OperationLog(action = "查询相册详情")
     @Operation(summary = "查询相册详情", description = "根据ID查询相册详情")
     @GetMapping("/{id}")
     public Result<AlbumVO> getAlbumById(
@@ -68,6 +73,7 @@ public class AlbumManageController {
     /**
      * 删除相册
      */
+    @OperationLog(action = "删除相册")
     @Operation(summary = "删除相册", description = "根据ID删除相册，同时删除相册下的照片")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteAlbum(

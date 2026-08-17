@@ -1,5 +1,6 @@
 package com.seiko.blog.controller.manage;
 
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.service.StatsService;
 import com.seiko.blog.vo.CreationTrendVO;
@@ -32,6 +33,7 @@ public class StatsController {
      *
      * @return 各模块数量及文章阅读量等统计数据
      */
+    @OperationLog(action = "获取数据统计概览")
     @Operation(summary = "获取数据统计概览", description = "统计已发布文章数、评论总数、相册数、照片数及文章阅读总量")
     @GetMapping
     public Result<StatsVO> getStats() {
@@ -44,6 +46,7 @@ public class StatsController {
      * @param days 统计天数，默认 7，最大 30
      * @return 近 N 天每日阅读次数
      */
+    @OperationLog(action = "获取阅读量趋势")
     @Operation(summary = "获取阅读量趋势", description = "按天统计近 N 天文章详情访问次数，默认 7 天，最大 30 天")
     @GetMapping("/read-trend")
     public Result<List<ReadTrendVO>> getReadTrend(
@@ -60,6 +63,7 @@ public class StatsController {
      * @param days 统计天数，默认 7，最大 30
      * @return 近 N 天每日新建文章、相册、照片数量
      */
+    @OperationLog(action = "获取内容新建趋势")
     @Operation(summary = "获取内容新建趋势", description = "按天统计近 N 天新建文章数、新建相册数、新增照片数，默认 7 天，最大 30 天")
     @GetMapping("/creation-trend")
     public Result<List<CreationTrendVO>> getCreationTrend(

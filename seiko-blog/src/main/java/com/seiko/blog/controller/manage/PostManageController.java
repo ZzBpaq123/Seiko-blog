@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.PostDTO;
 import com.seiko.blog.service.PostService;
@@ -27,6 +28,7 @@ public class PostManageController {
     /**
      * 查询文章列表
      */
+    @OperationLog(action = "查询文章列表")
     @Operation(summary = "查询文章列表", description = "查询所有文章列表，支持标题模糊查询、发布状态过滤和标签过滤")
     @GetMapping("/list")
     public Result<Page<PostVO>> getPostList(
@@ -41,6 +43,7 @@ public class PostManageController {
     /**
      * 创建文章
      */
+    @OperationLog(action = "创建文章")
     @Operation(summary = "创建文章", description = "新建文章，支持标签自动创建，slug 为空时根据标题生成")
     @PostMapping
     public Result<Long> createPost(@Valid @RequestBody PostDTO dto) {
@@ -50,6 +53,7 @@ public class PostManageController {
     /**
      * 更新文章
      */
+    @OperationLog(action = "更新文章")
     @Operation(summary = "更新文章", description = "根据ID更新文章，标签会全量替换")
     @PutMapping("/{id}")
     public Result<Boolean> updatePost(
@@ -61,6 +65,7 @@ public class PostManageController {
     /**
      * 查询文章详情
      */
+    @OperationLog(action = "查询文章详情")
     @Operation(summary = "查询文章详情", description = "根据ID查询文章详情")
     @GetMapping("/{id}")
     public Result<PostVO> getPostById(
@@ -71,6 +76,7 @@ public class PostManageController {
     /**
      * 删除文章
      */
+    @OperationLog(action = "删除文章")
     @Operation(summary = "删除文章", description = "根据ID删除文章，同时移除文章标签关联")
     @DeleteMapping("/{id}")
     public Result<Boolean> deletePost(

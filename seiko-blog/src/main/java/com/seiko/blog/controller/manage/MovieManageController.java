@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.MovieDTO;
 import com.seiko.blog.service.MovieService;
@@ -26,6 +27,7 @@ public class MovieManageController {
     /**
      * 查询电影列表
      */
+    @OperationLog(action = "查询电影列表")
     @Operation(summary = "查询电影列表", description = "分页查询电影列表，支持电影名称模糊查询，置顶电影优先")
     @GetMapping("/list")
     public Result<Page<MovieVO>> getMovieList(
@@ -38,6 +40,7 @@ public class MovieManageController {
     /**
      * 创建电影
      */
+    @OperationLog(action = "创建电影")
     @Operation(summary = "创建电影", description = "新建电影")
     @PostMapping
     public Result<Long> createMovie(@Valid @RequestBody MovieDTO dto) {
@@ -47,6 +50,7 @@ public class MovieManageController {
     /**
      * 更新电影
      */
+    @OperationLog(action = "更新电影")
     @Operation(summary = "更新电影", description = "根据ID更新电影")
     @PutMapping("/{id}")
     public Result<Boolean> updateMovie(
@@ -58,6 +62,7 @@ public class MovieManageController {
     /**
      * 查询电影详情
      */
+    @OperationLog(action = "查询电影详情")
     @Operation(summary = "查询电影详情", description = "根据ID查询电影详情")
     @GetMapping("/{id}")
     public Result<MovieVO> getMovieById(
@@ -68,6 +73,7 @@ public class MovieManageController {
     /**
      * 删除电影
      */
+    @OperationLog(action = "删除电影")
     @Operation(summary = "删除电影", description = "根据ID删除电影")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteMovie(
@@ -78,6 +84,7 @@ public class MovieManageController {
     /**
      * 更新电影置顶状态
      */
+    @OperationLog(action = "更新电影置顶状态")
     @Operation(summary = "更新电影置顶状态", description = "根据ID切换电影置顶状态")
     @PatchMapping("/{id}/top")
     public Result<Boolean> updateMovieTop(

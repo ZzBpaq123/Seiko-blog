@@ -121,9 +121,13 @@ CREATE TABLE `seiko_logs`  (
   `ip_address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'IP地址',
   `user_agent` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户代理',
   `request_method` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求方法',
+  `method` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '方法名称(类全限定名.方法名)',
   `request_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '请求URL',
   `request_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '请求参数(JSON)',
+  `json_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '返回参数(JSON)',
   `response_code` int NULL DEFAULT NULL COMMENT '响应状态码',
+  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '操作状态: 0-正常 1-异常',
+  `cost_time` bigint NULL DEFAULT NULL COMMENT '消耗时间(毫秒)',
   `error_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '错误信息',
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除: 0-正常 1-已删除',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -137,6 +141,7 @@ CREATE TABLE `seiko_logs`  (
   INDEX `idx_username`(`username` ASC) USING BTREE,
   INDEX `idx_ip_address`(`ip_address` ASC) USING BTREE,
   INDEX `idx_response_code`(`response_code` ASC) USING BTREE,
+  INDEX `idx_status`(`status` ASC) USING BTREE,
   INDEX `idx_create_time`(`create_time` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2612 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '日志表' ROW_FORMAT = Dynamic;

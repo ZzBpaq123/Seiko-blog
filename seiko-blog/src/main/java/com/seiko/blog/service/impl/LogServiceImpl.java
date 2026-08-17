@@ -97,9 +97,13 @@ public class LogServiceImpl implements LogService {
         vo.setIpAddress(entity.getIpAddress());
         vo.setUserAgent(entity.getUserAgent());
         vo.setRequestMethod(entity.getRequestMethod());
+        vo.setMethod(entity.getMethod());
         vo.setRequestUrl(entity.getRequestUrl());
         vo.setRequestParams(entity.getRequestParams());
+        vo.setJsonResult(entity.getJsonResult());
         vo.setResponseCode(entity.getResponseCode());
+        vo.setStatus(entity.getStatus());
+        vo.setCostTime(entity.getCostTime());
         vo.setErrorMessage(entity.getErrorMessage());
         vo.setCreateTime(entity.getCreateTime());
         return vo;
@@ -116,9 +120,13 @@ public class LogServiceImpl implements LogService {
         entity.setIpAddress(dto.getIpAddress());
         entity.setUserAgent(dto.getUserAgent());
         entity.setRequestMethod(dto.getRequestMethod());
+        entity.setMethod(dto.getMethod());
         entity.setRequestUrl(dto.getRequestUrl());
         entity.setRequestParams(dto.getRequestParams());
+        entity.setJsonResult(dto.getJsonResult());
         entity.setResponseCode(dto.getResponseCode());
+        entity.setStatus(dto.getStatus());
+        entity.setCostTime(dto.getCostTime());
         entity.setErrorMessage(dto.getErrorMessage());
         return entity;
     }

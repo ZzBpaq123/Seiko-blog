@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.NoticeDTO;
 import com.seiko.blog.service.NoticeService;
@@ -26,6 +27,7 @@ public class NoticeManageController {
     /**
      * 查询公告列表
      */
+    @OperationLog(action = "查询公告列表")
     @Operation(summary = "查询公告列表", description = "分页查询公告列表，支持标题模糊查询和启用状态过滤")
     @GetMapping("/list")
     public Result<Page<NoticeVO>> getNoticeList(
@@ -39,6 +41,7 @@ public class NoticeManageController {
     /**
      * 创建公告
      */
+    @OperationLog(action = "创建公告")
     @Operation(summary = "创建公告", description = "新建公告")
     @PostMapping
     public Result<Long> createNotice(@Valid @RequestBody NoticeDTO dto) {
@@ -48,6 +51,7 @@ public class NoticeManageController {
     /**
      * 更新公告
      */
+    @OperationLog(action = "更新公告")
     @Operation(summary = "更新公告", description = "根据ID更新公告")
     @PutMapping("/{id}")
     public Result<Boolean> updateNotice(
@@ -59,6 +63,7 @@ public class NoticeManageController {
     /**
      * 查询公告详情
      */
+    @OperationLog(action = "查询公告详情")
     @Operation(summary = "查询公告详情", description = "根据ID查询公告详情")
     @GetMapping("/{id}")
     public Result<NoticeVO> getNoticeById(
@@ -69,6 +74,7 @@ public class NoticeManageController {
     /**
      * 删除公告
      */
+    @OperationLog(action = "删除公告")
     @Operation(summary = "删除公告", description = "根据ID删除公告")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteNotice(
@@ -79,6 +85,7 @@ public class NoticeManageController {
     /**
      * 更新公告启用状态
      */
+    @OperationLog(action = "更新公告启用状态")
     @Operation(summary = "更新公告启用状态", description = "根据ID切换公告启用状态")
     @PatchMapping("/{id}/enabled")
     public Result<Boolean> updateNoticeEnabled(

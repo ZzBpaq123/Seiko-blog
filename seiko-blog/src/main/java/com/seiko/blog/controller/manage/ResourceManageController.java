@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.ResourceDTO;
 import com.seiko.blog.service.ResourceService;
@@ -26,6 +27,7 @@ public class ResourceManageController {
     /**
      * 查询资源列表
      */
+    @OperationLog(action = "查询资源列表")
     @Operation(summary = "查询资源列表", description = "分页查询资源列表，支持资源名称模糊查询、分类和启用状态过滤")
     @GetMapping("/list")
     public Result<Page<ResourceVO>> getResourceList(
@@ -40,6 +42,7 @@ public class ResourceManageController {
     /**
      * 创建资源
      */
+    @OperationLog(action = "创建资源")
     @Operation(summary = "创建资源", description = "新建资源")
     @PostMapping
     public Result<Long> createResource(@Valid @RequestBody ResourceDTO dto) {
@@ -49,6 +52,7 @@ public class ResourceManageController {
     /**
      * 更新资源
      */
+    @OperationLog(action = "更新资源")
     @Operation(summary = "更新资源", description = "根据ID更新资源")
     @PutMapping("/{id}")
     public Result<Boolean> updateResource(
@@ -60,6 +64,7 @@ public class ResourceManageController {
     /**
      * 查询资源详情
      */
+    @OperationLog(action = "查询资源详情")
     @Operation(summary = "查询资源详情", description = "根据ID查询资源详情")
     @GetMapping("/{id}")
     public Result<ResourceVO> getResourceById(
@@ -70,6 +75,7 @@ public class ResourceManageController {
     /**
      * 删除资源
      */
+    @OperationLog(action = "删除资源")
     @Operation(summary = "删除资源", description = "根据ID删除资源")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteResource(
@@ -80,6 +86,7 @@ public class ResourceManageController {
     /**
      * 更新资源启用状态
      */
+    @OperationLog(action = "更新资源启用状态")
     @Operation(summary = "更新资源启用状态", description = "根据ID切换资源启用状态")
     @PatchMapping("/{id}/enabled")
     public Result<Boolean> updateResourceEnabled(

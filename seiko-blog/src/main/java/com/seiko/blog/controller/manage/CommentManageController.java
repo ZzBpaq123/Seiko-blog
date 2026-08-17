@@ -3,6 +3,7 @@ package com.seiko.blog.controller.manage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.seiko.blog.service.CommentService;
 import com.seiko.blog.vo.CommentVO;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +30,7 @@ public class CommentManageController {
     /**
      * 查询评论列表
      */
+    @OperationLog(action = "查询评论列表")
     @Operation(summary = "查询评论列表", description = "分页查询评论列表，支持评论作者模糊查询")
     @GetMapping("/list")
     public Result<Page<CommentVO>> getCommentList(
@@ -41,6 +43,7 @@ public class CommentManageController {
     /**
      * 查询评论详情
      */
+    @OperationLog(action = "查询评论详情")
     @Operation(summary = "查询评论详情", description = "根据ID查询评论详情")
     @GetMapping("/{id}")
     public Result<CommentVO> getCommentById(
@@ -51,6 +54,7 @@ public class CommentManageController {
     /**
      * 删除评论
      */
+    @OperationLog(action = "删除评论")
     @Operation(summary = "删除评论", description = "根据ID删除评论")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteComment(

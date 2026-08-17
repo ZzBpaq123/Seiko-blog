@@ -41,4 +41,32 @@ public @interface OperationLog {
      * @return 操作描述，支持 SpEL 表达式
      */
     String description() default "";
+
+    /**
+     * 是否保存请求参数
+     * <p>
+     * 参考若依 {@code @Log(isSaveRequestData)}：关闭后不记录请求参数，用于避免记录大体积或敏感请求体
+     *
+     * @return 是否保存请求参数，默认 true
+     */
+    boolean isSaveRequestData() default true;
+
+    /**
+     * 是否保存响应参数
+     * <p>
+     * 参考若依 {@code @Log(isSaveResponseData)}：关闭后不记录接口返回结果
+     *
+     * @return 是否保存响应参数，默认 true
+     */
+    boolean isSaveResponseData() default true;
+
+    /**
+     * 排除的请求参数名
+     * <p>
+     * 参考若依 {@code @Log(excludeParamNames)}：序列化请求参数时忽略指定字段
+     * （大小写敏感，匹配 JSON 字段名；密码等敏感字段默认已排除）
+     *
+     * @return 需要排除的参数名列表，默认空
+     */
+    String[] excludeParamNames() default {};
 }

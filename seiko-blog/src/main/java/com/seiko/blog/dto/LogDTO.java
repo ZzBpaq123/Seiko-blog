@@ -41,14 +41,26 @@ public class LogDTO {
     @Schema(description = "请求方法")
     private String requestMethod;
 
+    @Schema(description = "方法名称(类全限定名.方法名)")
+    private String method;
+
     @Schema(description = "请求URL")
     private String requestUrl;
 
     @Schema(description = "请求参数(JSON)")
     private String requestParams;
 
+    @Schema(description = "返回参数(JSON)")
+    private String jsonResult;
+
     @Schema(description = "响应状态码")
     private Integer responseCode;
+
+    @Schema(description = "操作状态: 0-正常 1-异常")
+    private Integer status;
+
+    @Schema(description = "消耗时间(毫秒)")
+    private Long costTime;
 
     @Schema(description = "错误信息")
     private String errorMessage;

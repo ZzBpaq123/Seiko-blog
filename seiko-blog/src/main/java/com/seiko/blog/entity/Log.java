@@ -72,6 +72,11 @@ public class Log extends BaseEntity {
     private String requestMethod;
 
     /**
+     * 方法名称（类全限定名.方法名）
+     */
+    private String method;
+
+    /**
      * 请求URL
      */
     @TableField("request_url")
@@ -84,10 +89,27 @@ public class Log extends BaseEntity {
     private String requestParams;
 
     /**
+     * 返回参数(JSON)
+     */
+    @TableField("json_result")
+    private String jsonResult;
+
+    /**
      * 响应状态码
      */
     @TableField("response_code")
     private Integer responseCode;
+
+    /**
+     * 操作状态: 0-正常 1-异常
+     */
+    private Integer status;
+
+    /**
+     * 消耗时间(毫秒)
+     */
+    @TableField("cost_time")
+    private Long costTime;
 
     /**
      * 错误信息

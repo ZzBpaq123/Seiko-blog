@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.BookDTO;
 import com.seiko.blog.service.BookService;
@@ -26,6 +27,7 @@ public class BookManageController {
     /**
      * 查询书籍列表
      */
+    @OperationLog(action = "查询书籍列表")
     @Operation(summary = "查询书籍列表", description = "分页查询书籍列表，支持书籍名称模糊查询")
     @GetMapping("/list")
     public Result<Page<BookVO>> getBookList(
@@ -38,6 +40,7 @@ public class BookManageController {
     /**
      * 创建书籍
      */
+    @OperationLog(action = "创建书籍")
     @Operation(summary = "创建书籍", description = "新建书籍")
     @PostMapping
     public Result<Long> createBook(@Valid @RequestBody BookDTO dto) {
@@ -47,6 +50,7 @@ public class BookManageController {
     /**
      * 更新书籍
      */
+    @OperationLog(action = "更新书籍")
     @Operation(summary = "更新书籍", description = "根据ID更新书籍")
     @PutMapping("/{id}")
     public Result<Boolean> updateBook(
@@ -58,6 +62,7 @@ public class BookManageController {
     /**
      * 查询书籍详情
      */
+    @OperationLog(action = "查询书籍详情")
     @Operation(summary = "查询书籍详情", description = "根据ID查询书籍详情")
     @GetMapping("/{id}")
     public Result<BookVO> getBookById(
@@ -68,6 +73,7 @@ public class BookManageController {
     /**
      * 删除书籍
      */
+    @OperationLog(action = "删除书籍")
     @Operation(summary = "删除书籍", description = "根据ID删除书籍")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteBook(

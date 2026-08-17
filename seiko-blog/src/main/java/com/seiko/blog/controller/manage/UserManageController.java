@@ -1,6 +1,7 @@
 package com.seiko.blog.controller.manage;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.result.Result;
 import com.seiko.blog.dto.UserDTO;
 import com.seiko.blog.service.UserService;
@@ -26,6 +27,7 @@ public class UserManageController {
     /**
      * 查询用户列表
      */
+    @OperationLog(action = "查询用户列表")
     @Operation(summary = "查询用户列表", description = "分页查询用户列表，支持用户名/昵称、邮箱模糊查询、角色和状态过滤")
     @GetMapping("/list")
     public Result<Page<UserVO>> getUserList(
@@ -41,6 +43,7 @@ public class UserManageController {
     /**
      * 创建用户
      */
+    @OperationLog(action = "创建用户")
     @Operation(summary = "创建用户", description = "新建用户，密码必填")
     @PostMapping
     public Result<Long> createUser(@Valid @RequestBody UserDTO dto) {
@@ -50,6 +53,7 @@ public class UserManageController {
     /**
      * 更新用户
      */
+    @OperationLog(action = "更新用户")
     @Operation(summary = "更新用户", description = "根据ID更新用户，密码留空表示不修改")
     @PutMapping("/{id}")
     public Result<Boolean> updateUser(
@@ -61,6 +65,7 @@ public class UserManageController {
     /**
      * 查询用户详情
      */
+    @OperationLog(action = "查询用户详情")
     @Operation(summary = "查询用户详情", description = "根据ID查询用户详情")
     @GetMapping("/{id}")
     public Result<UserVO> getUserById(
@@ -71,6 +76,7 @@ public class UserManageController {
     /**
      * 删除用户
      */
+    @OperationLog(action = "删除用户")
     @Operation(summary = "删除用户", description = "根据ID删除用户")
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteUser(
@@ -81,6 +87,7 @@ public class UserManageController {
     /**
      * 更新用户状态
      */
+    @OperationLog(action = "更新用户状态")
     @Operation(summary = "更新用户状态", description = "根据ID切换用户状态(激活/禁用)")
     @PatchMapping("/{id}/status")
     public Result<Boolean> updateUserStatus(
@@ -92,6 +99,7 @@ public class UserManageController {
     /**
      * 重置用户密码
      */
+    @OperationLog(action = "重置用户密码")
     @Operation(summary = "重置用户密码", description = "根据ID重置用户密码")
     @PatchMapping("/{id}/password")
     public Result<Boolean> resetUserPassword(
