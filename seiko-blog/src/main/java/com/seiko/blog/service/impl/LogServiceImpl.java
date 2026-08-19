@@ -1,6 +1,7 @@
 package com.seiko.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.blog.dto.LogDTO;
 import com.seiko.blog.entity.Log;
@@ -26,29 +27,22 @@ public class LogServiceImpl implements LogService {
     private final LogMapper logMapper;
 
     @Override
-    public List<LogVO> getLogList() {
-        return logMapper.selectList(
-                new LambdaQueryWrapper<Log>()
-                    .orderByDesc(Log::getCreateTime)
-        ).stream().map(this::convertToVO).collect(Collectors.toList());
-    }
+    public Page<LogVO> getLogList(long pageNum, long pageSize, String logType) {
+        Page<Log> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Log> wrapper = new LambdaQueryWrapper<Log>()
+                .orderByDesc(Log::getCreateTime);
+        if (logType != null && !logType.isEmpty()) {
+            wrapper.eq(Log::getLogType, logType);
+        }
+        Page<Log> entityPage = logMapper.selectPage(page, wrapper);
 
-    @Override
-    public List<LogVO> getLogListByType(String logType) {
-        return logMapper.selectList(
-                new LambdaQueryWrapper<Log>()
-                    .eq(Log::getLogType, logType)
-                    .orderByDesc(Log::getCreateTime)
-        ).stream().map(this::convertToVO).collect(Collectors.toList());
-    }
+        List<LogVO> records = entityPage.getRecords().stream()
+                .map(this::convertToVO)
+                .collect(Collectors.toList());
 
-    @Override
-    public List<LogVO> getLogListByLevel(String logLevel) {
-        return logMapper.selectList(
-                new LambdaQueryWrapper<Log>()
-                    .eq(Log::getLogLevel, logLevel)
-                    .orderByDesc(Log::getCreateTime)
-        ).stream().map(this::convertToVO).collect(Collectors.toList());
+        Page<LogVO> resultPage = new Page<>(entityPage.getCurrent(), entityPage.getSize(), entityPage.getTotal());
+        resultPage.setRecords(records);
+        return resultPage;
     }
 
     @Override
@@ -57,16 +51,6 @@ public class LogServiceImpl implements LogService {
         if (entity == null || entity.getIsDeleted() == 1) {
             throw new BusinessException(500, "日志不存在");
         }
-        return convertToVO(entity);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public LogVO createLog(LogDTO logDTO) {
-        Log entity = convertToEntity(logDTO);
-        logMapper.insert(entity);
-        log.info("创建日志: {} - {}", entity.getLogType(), entity.getAction());
-
         return convertToVO(entity);
     }
 
