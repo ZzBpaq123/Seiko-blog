@@ -222,9 +222,7 @@ Token 通过请求头 `token` 传递（对应 Sa-Token 的 `token-name` 配置�
 
 ### 默认账号
 
-- 项目约定管理员：`admin` / `123456`
-
-> 注意：`sql/seiko_blog.sql` 仅创建表结构，不含数据。首次部署需要手动向 `seiko_users` 表插入管理员记录（密码使用 MD5 哈希），或通过注册接口创建用户后再调整角色。
+- 项目约定管理员：`seiko` / `123456`
 
 ### 公开前台页面
 
@@ -391,8 +389,6 @@ public void method() {
 }
 ```
 
-更多前端开发规范见 `docs/development-guideline.md`、`docs/page-convention.md` 等文档。
-
 ## 参与贡献
 
 1. Fork 本仓库
@@ -414,9 +410,7 @@ public void method() {
 - [x] 数据统计报表（后端接口 + 管理端图表）
 - [x] 公开前台站点（seiko-blog-ui）
 - [x] 后台管理系统（seiko-manage）
-- [ ] 文章分页路径参数化，回归纯 SSG
-- [ ] 操作日志查询 / 管理界面
-- [ ] 前台音乐页数据接入
+- [x] 操作日志查询 / 管理界面
 - [ ] AI 摘要接入后端数据
 
 ## 许可证

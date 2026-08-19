@@ -125,17 +125,6 @@ seiko-manage/
 
 `.env.example` 已提交到仓库，实际配置请复制为 `.env.local`（已被 `.gitignore` 忽略），避免提交真实 key。
 
-## 后端接口
-
-管理后台调用 Seiko Blog 后端 REST API，实际请求落在 `/api/manage/**`（默认需登录且具备 `admin` 角色；`user/login`、`user/register`、`user/check` 公开，`user/logout`、`user/info` 仅需登录）。
-
-`utils/request.ts` 中的 Axios 实例负责：
-
-- 请求拦截：从 `localStorage` 读取 Token 并注入 `token` 请求头
-- 响应拦截：拆包后端 `Result.data`，错误码映射为提示，401 / 1002 清除登录态并跳转登录
-
-登录账号需后端用户表存在 `admin` 角色用户，项目约定默认账号：`admin` / `123456`。
-
 ## 相关项目
 
 - [Seiko Blog UI](../seiko-blog-ui/) — 博客前台展示（公开前台，端口 3000）

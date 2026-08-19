@@ -213,7 +213,6 @@ npm run build
 ## 已知问题与待办
 
 - `AiSummary` 目前是占位组件，尚未接收后端文章内容
-- `getAllTags()`、`getPostsByTag()` 与 `src/api/user.ts` 已封装但暂未接入页面
 
 ## 许可证
 
