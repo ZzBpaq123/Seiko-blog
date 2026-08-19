@@ -356,3 +356,46 @@ export interface FootprintCreateDTO {
   lat?: number;
   lng?: number;
 }
+
+// ─── Log ───
+
+/** 日志 VO，对应后端 LogVO */
+export interface LogVO {
+  id: number;
+  /** 日志类型: operation-操作日志, login-登录日志, error-错误日志, security-安全日志 */
+  logType: string;
+  /** 日志级别: DEBUG-调试, INFO-信息, WARN-警告, ERROR-错误 */
+  logLevel: string;
+  /** 操作动作 */
+  action: string;
+  /** 操作描述 */
+  description?: string;
+  /** 操作用户ID */
+  userId?: number;
+  /** 操作用户名 */
+  username?: string;
+  /** IP地址 */
+  ipAddress?: string;
+  /** 用户代理 */
+  userAgent?: string;
+  /** 请求方法 */
+  requestMethod?: string;
+  /** 方法名称（类全限定名.方法名） */
+  method?: string;
+  /** 请求URL */
+  requestUrl?: string;
+  /** 请求参数(JSON) */
+  requestParams?: string;
+  /** 返回参数(JSON) */
+  jsonResult?: string;
+  /** 响应状态码 */
+  responseCode?: number;
+  /** 操作状态: 0-正常 1-异常 */
+  status?: number;
+  /** 消耗时间(毫秒) */
+  costTime?: number;
+  /** 错误信息 */
+  errorMessage?: string;
+  /** 创建时间，格式 yyyy-MM-dd HH:mm:ss */
+  createTime: string;
+}

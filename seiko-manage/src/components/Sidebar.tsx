@@ -14,6 +14,7 @@ import {
   Film,
   Users,
   Link2,
+  ScrollText,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -36,6 +37,7 @@ const navItems: NavItem[] = [
   { label: "电影管理", href: "/movies", icon: <Film size={18} /> },
   { label: "资源管理", href: "/resources", icon: <Link2 size={18} /> },
   { label: "用户管理", href: "/users", icon: <Users size={18} /> },
+  { label: "日志管理", href: "/logs", icon: <ScrollText size={18} /> },
 ];
 
 interface SidebarProps {
