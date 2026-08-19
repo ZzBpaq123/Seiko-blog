@@ -135,6 +135,13 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           >
             {item.label}
           </span>
+          <span
+            className={`ml-auto shrink-0 transition-transform duration-200 ${
+              isGroupOpen(item) ? "rotate-90" : ""
+            } ${collapsed ? "hidden" : ""}`}
+          >
+            <ChevronRight size={16} />
+          </span>
         </button>
         {isGroupOpen(item) && (
           <ul className="mt-1 space-y-1">
@@ -188,8 +195,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2">
-        <ul className="space-y-2">{navItems.map(renderItem)}</ul>
+      <nav className="no-scrollbar flex-1 overflow-y-auto overflow-x-hidden py-4 px-2">
+        <ul className="space-y-3">{navItems.map(renderItem)}</ul>
       </nav>
 
       {/* Collapse Toggle */}
