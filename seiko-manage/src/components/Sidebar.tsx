@@ -46,13 +46,13 @@ const navItems: NavItem[] = [
   { label: "书籍管理", href: "/books", icon: <BookOpen size={18} /> },
   { label: "电影管理", href: "/movies", icon: <Film size={18} /> },
   { label: "资源管理", href: "/resources", icon: <Link2 size={18} /> },
-  { label: "用户管理", href: "/users", icon: <Users size={18} /> },
   {
     label: "系统管理",
     icon: <Settings size={18} />,
     children: [
-      { label: "日志管理", href: "/logs", icon: <ScrollText size={18} /> },
+      { label: "用户管理", href: "/users", icon: <Users size={18} /> },
       { label: "字典管理", href: "/dicts", icon: <BookMarked size={18} /> },
+      { label: "日志管理", href: "/logs", icon: <ScrollText size={18} /> },
     ],
   },
 ];
