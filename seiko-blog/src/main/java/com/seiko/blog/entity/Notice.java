@@ -19,9 +19,6 @@ public class Notice extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @TableField("notice_icon")
-    private String noticeIcon;
-
     /**
      * 公告标题
      */

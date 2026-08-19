@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地
+ Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 80045 (8.0.45)
+ Source Server Version : 80410 (8.4.10)
  Source Host           : localhost:3306
  Source Schema         : seiko_blog
 
  Target Server Type    : MySQL
- Target Server Version : 80045 (8.0.45)
+ Target Server Version : 80410 (8.4.10)
  File Encoding         : 65001
 
- Date: 21/07/2026 09:03:26
+ Date: 19/08/2026 15:11:22
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,11 @@ CREATE TABLE `seiko_album`  (
   `delete_time` datetime NULL DEFAULT NULL COMMENT '逻辑删除时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '相册表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '相册表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_album
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_books
@@ -51,7 +55,11 @@ CREATE TABLE `seiko_books`  (
   `delete_time` datetime NULL DEFAULT NULL COMMENT '逻辑删除时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '书籍表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '书籍表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_books
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_comments
@@ -59,7 +67,7 @@ CREATE TABLE `seiko_books`  (
 DROP TABLE IF EXISTS `seiko_comments`;
 CREATE TABLE `seiko_comments`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `user_id` bigint UNSIGNED NOT NULL COMMENT '关联用户ID',
+  `user_email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户邮箱',
   `author` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论作者(冗余字段,显示用)',
   `comment_content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
   `comment_date` date NOT NULL COMMENT '评论日期',
@@ -70,12 +78,102 @@ CREATE TABLE `seiko_comments`  (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `delete_time` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
+  INDEX `idx_user_id`(`user_email` ASC) USING BTREE,
   INDEX `idx_author`(`author` ASC) USING BTREE,
   INDEX `idx_comment_date`(`comment_date` ASC) USING BTREE,
   INDEX `idx_post_id`(`post_id` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '评论表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '评论表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_comments
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for seiko_dict_items
+-- ----------------------------
+DROP TABLE IF EXISTS `seiko_dict_items`;
+CREATE TABLE `seiko_dict_items`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `type_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属字典类型编码',
+  `item_label` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '展示文案，如 开启',
+  `item_value` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '存储值，如 0',
+  `item_tag` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标签样式: green/red/yellow/blue/gray',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否默认项: 0-否 1-是',
+  `enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否启用: 0-停用 1-启用',
+  `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除: 0-正常 1-已删除',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `delete_time` datetime NULL DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_type_value`(`type_code` ASC, `item_value` ASC) USING BTREE,
+  INDEX `idx_enabled`(`enabled` ASC) USING BTREE,
+  INDEX `idx_sort_order`(`type_code` ASC, `sort_order` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典项表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_dict_items
+-- ----------------------------
+INSERT INTO `seiko_dict_items` VALUES (1, 'common_status', '开启', '0', 'green', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (2, 'common_status', '关闭', '1', 'gray', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (3, 'common_boolean', '已启用', 'true', 'green', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (4, 'common_boolean', '已停用', 'false', 'gray', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (5, 'user_status', '正常', 'active', 'green', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (6, 'user_status', '已禁用', 'inactive', 'red', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (7, 'user_role', '普通用户', 'user', 'blue', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (8, 'user_role', '管理员', 'admin', 'red', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (9, 'log_type', '操作日志', 'operation', 'blue', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (10, 'log_type', '登录日志', 'login', 'green', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (11, 'log_type', '错误日志', 'error', 'red', 0, 1, 3, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (12, 'log_type', '安全日志', 'security', 'yellow', 0, 1, 4, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (13, 'log_level', '调试', 'DEBUG', 'gray', 0, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (14, 'log_level', '信息', 'INFO', 'blue', 1, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (15, 'log_level', '警告', 'WARN', 'yellow', 0, 1, 3, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (16, 'log_level', '错误', 'ERROR', 'red', 0, 1, 4, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (17, 'log_status', '正常', '0', 'green', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (18, 'log_status', '异常', '1', 'red', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (19, 'post_status', '已发布', 'true', 'green', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (20, 'post_status', '草稿', 'false', 'yellow', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (21, 'movie_top', '普通', '0', 'gray', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (22, 'movie_top', '置顶', '1', 'yellow', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (23, 'footprint_type', '国内', 'domestic', 'blue', 1, 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_items` VALUES (24, 'footprint_type', '国际', 'international', 'gray', 0, 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+
+-- ----------------------------
+-- Table structure for seiko_dict_types
+-- ----------------------------
+DROP TABLE IF EXISTS `seiko_dict_types`;
+CREATE TABLE `seiko_dict_types`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `type_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '字典类型编码，如 common_status',
+  `type_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '字典类型名称，如 通用状态',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+  `enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否启用: 0-停用 1-启用',
+  `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除: 0-正常 1-已删除',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `delete_time` datetime NULL DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_type_code`(`type_code` ASC) USING BTREE,
+  INDEX `idx_enabled`(`enabled` ASC) USING BTREE,
+  INDEX `idx_sort_order`(`sort_order` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_dict_types
+-- ----------------------------
+INSERT INTO `seiko_dict_types` VALUES (1, 'common_status', '通用状态', '通用开启/关闭状态，如 0-开启 1-关闭', 1, 1, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (2, 'common_boolean', '通用布尔状态', '通用启用/停用状态，如 true-已启用 false-已停用', 1, 2, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (3, 'user_status', '用户状态', '用户账号状态', 1, 3, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (4, 'user_role', '用户角色', '用户角色类型', 1, 4, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (5, 'log_type', '日志类型', '操作/登录/错误/安全日志', 1, 5, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (6, 'log_level', '日志级别', 'DEBUG/INFO/WARN/ERROR', 1, 6, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (7, 'log_status', '日志操作状态', '日志操作状态: 0-正常 1-异常', 1, 7, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (8, 'post_status', '文章发布状态', 'true-已发布 false-草稿', 1, 8, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (9, 'movie_top', '电影置顶状态', '电影是否置顶', 1, 9, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
+INSERT INTO `seiko_dict_types` VALUES (10, 'footprint_type', '足迹类型', '足迹地域类型', 1, 10, 0, '2026-08-19 11:58:23', '2026-08-19 11:58:23', NULL);
 
 -- ----------------------------
 -- Table structure for seiko_footprints
@@ -104,7 +202,11 @@ CREATE TABLE `seiko_footprints`  (
   INDEX `idx_footprint_date`(`footprint_date` ASC) USING BTREE,
   INDEX `idx_footprint_type`(`footprint_type` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '足迹表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '足迹表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_footprints
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_logs
@@ -141,10 +243,14 @@ CREATE TABLE `seiko_logs`  (
   INDEX `idx_username`(`username` ASC) USING BTREE,
   INDEX `idx_ip_address`(`ip_address` ASC) USING BTREE,
   INDEX `idx_response_code`(`response_code` ASC) USING BTREE,
-  INDEX `idx_status`(`status` ASC) USING BTREE,
   INDEX `idx_create_time`(`create_time` ASC) USING BTREE,
-  INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2612 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '日志表' ROW_FORMAT = Dynamic;
+  INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE,
+  INDEX `idx_status`(`status` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '日志表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_logs
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_movies
@@ -167,7 +273,11 @@ CREATE TABLE `seiko_movies`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE,
   INDEX `idx_is_top`(`is_top` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '电影信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '电影信息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_movies
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_notice
@@ -178,7 +288,6 @@ CREATE TABLE `seiko_notice`  (
   `notice_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '公告标题',
   `notice_content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '公告内容',
   `notice_link` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '跳转链接',
-  `bg_color` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '背景渐变色(如from-blue-500/10 to-purple-500/10)',
   `sort_order` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '排序序号',
   `is_enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否启用: 0-禁用 1-启用',
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除: 0-正常 1-已删除',
@@ -189,7 +298,11 @@ CREATE TABLE `seiko_notice`  (
   INDEX `idx_sort_order`(`sort_order` ASC) USING BTREE,
   INDEX `idx_is_enabled`(`is_enabled` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '公告表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '公告表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_notice
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_photos
@@ -215,7 +328,11 @@ CREATE TABLE `seiko_photos`  (
   INDEX `idx_photo_location`(`photo_location` ASC) USING BTREE,
   INDEX `idx_sort_order`(`sort_order` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '照片表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '照片表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_photos
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_post_tags
@@ -227,7 +344,11 @@ CREATE TABLE `seiko_post_tags`  (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`post_id`, `tag_id`) USING BTREE,
   INDEX `idx_tag_id`(`tag_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文章标签关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文章标签关联表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_post_tags
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_posts
@@ -254,7 +375,11 @@ CREATE TABLE `seiko_posts`  (
   INDEX `idx_publish_time`(`publish_time` ASC) USING BTREE,
   INDEX `idx_is_published`(`is_published` ASC, `publish_time` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文章表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文章表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_posts
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_resources
@@ -262,6 +387,7 @@ CREATE TABLE `seiko_posts`  (
 DROP TABLE IF EXISTS `seiko_resources`;
 CREATE TABLE `seiko_resources`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '资源主键ID',
+  `resource_icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源图标',
   `resource_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '资源名称',
   `resource_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '资源网址',
   `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源分类(如:开发工具/设计资源/学习)',
@@ -277,7 +403,11 @@ CREATE TABLE `seiko_resources`  (
   INDEX `idx_sort_order`(`sort_order` ASC) USING BTREE,
   INDEX `idx_is_enabled`(`is_enabled` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '资源目录表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '资源目录表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_resources
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_tags
@@ -295,7 +425,11 @@ CREATE TABLE `seiko_tags`  (
   UNIQUE INDEX `uk_name`(`name` ASC) USING BTREE,
   UNIQUE INDEX `uk_slug`(`slug` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '标签表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '标签表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_tags
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for seiko_users
@@ -325,6 +459,11 @@ CREATE TABLE `seiko_users`  (
   INDEX `idx_user_role`(`user_role` ASC) USING BTREE,
   INDEX `idx_user_status`(`user_status` ASC) USING BTREE,
   INDEX `idx_is_deleted`(`is_deleted` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of seiko_users
+-- ----------------------------
+INSERT INTO `seiko_users` VALUES (2, 'seiko', 'seiko', '1302183481@qq.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '#FFB7B2', NULL, NULL, 'admin', 'active', '2026-08-19 11:34:51', 0, '2026-07-29 09:51:18', '2026-07-29 09:52:06', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
