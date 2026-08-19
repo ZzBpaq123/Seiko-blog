@@ -6,6 +6,8 @@ import { createNotice, getNoticeById, updateNotice } from "@/api/notice";
 import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictFormOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import type { NoticeDTO, NoticeVO } from "@/types";
 
@@ -20,6 +22,7 @@ export default function NoticeForm({ mode }: { mode: "new" | "edit" }) {
   const [sortOrder, setSortOrder] = useState("0");
   const [enabled, setEnabled] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const { options: commonBooleanOptions } = useDictOptions("common_boolean");
 
   const { loading } = useEntityLoad<NoticeVO>({
     enabled: mode === "edit",
@@ -119,10 +122,7 @@ export default function NoticeForm({ mode }: { mode: "new" | "edit" }) {
             <Select
               value={enabled ? "true" : "false"}
               onChange={(v) => setEnabled(v === "true")}
-              options={[
-                { value: "true", label: "已启用" },
-                { value: "false", label: "已停用" },
-              ]}
+              options={dictFormOptions(commonBooleanOptions)}
             />
           </div>
         </div>

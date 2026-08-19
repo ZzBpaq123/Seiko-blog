@@ -12,17 +12,11 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
 const PAGE_SIZE = 10;
-
-function formatType(type: string) {
-  return type === "domestic" ? "国内" : type === "international" ? "国际" : type;
-}
-
-function typeBadgeClass(type: string) {
-  return type === "domestic" ? "badge badge-blue" : "badge badge-purple";
-}
 
 export default function FootprintsPage() {
   const router = useRouter();
@@ -34,6 +28,7 @@ export default function FootprintsPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const debouncedSearch = useDebounce(search);
+  const { options: footprintTypeOptions } = useDictOptions("footprint_type");
 
   const { page, setPage, loading, pageResult, records, refresh, reset } = usePagedList<FootprintVO>({
     pageSize: PAGE_SIZE,
@@ -119,11 +114,7 @@ export default function FootprintsPage() {
           className="flex-3 min-w-0"
           value={typeFilter}
           onChange={(v) => setTypeFilter(String(v))}
-          options={[
-            { value: "", label: "全部类型" },
-            { value: "domestic", label: "国内" },
-            { value: "international", label: "国际" },
-          ]}
+          options={dictSelectOptions(footprintTypeOptions, "全部类型")}
         />
 
         {/* 重置按钮 */}
@@ -182,8 +173,8 @@ export default function FootprintsPage() {
                     </span>
                   </td>
                   <td>
-                    <span className={typeBadgeClass(fp.footprintType)}>
-                      {formatType(fp.footprintType)}
+                    <span className={dictBadgeClass(footprintTypeOptions, fp.footprintType)}>
+                      {dictLabel(footprintTypeOptions, fp.footprintType)}
                     </span>
                   </td>
                   <td className="text-xs text-gray-500 font-mono">
@@ -252,8 +243,8 @@ export default function FootprintsPage() {
                 />
               )}
               <div className="flex flex-wrap gap-2">
-                <span className={typeBadgeClass(detail.footprintType)}>
-                  {formatType(detail.footprintType)}
+                <span className={dictBadgeClass(footprintTypeOptions, detail.footprintType)}>
+                  {dictLabel(footprintTypeOptions, detail.footprintType)}
                 </span>
                 <span className="badge badge-blue">{detail.countryCode?.toUpperCase()}</span>
               </div>

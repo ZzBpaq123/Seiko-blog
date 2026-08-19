@@ -161,6 +161,21 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    public List<DictItemVO> getItemOptions(String typeCode) {
+        if (typeCode == null || typeCode.isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR);
+        }
+        List<DictItem> items = dictItemMapper.selectList(new LambdaQueryWrapper<DictItem>()
+                .eq(DictItem::getTypeCode, typeCode.trim())
+                .eq(DictItem::getEnabled, true)
+                .orderByAsc(DictItem::getSortOrder)
+                .orderByAsc(DictItem::getId));
+        return items.stream()
+                .map(this::convertItemToVO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createItem(DictItemDTO dto) {
         String typeCode = dto.getTypeCode().trim();

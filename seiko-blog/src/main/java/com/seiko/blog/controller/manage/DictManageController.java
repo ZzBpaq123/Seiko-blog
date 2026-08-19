@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 字典管理
  */
@@ -133,6 +135,17 @@ public class DictManageController {
     public Result<DictItemVO> getItemById(
             @Parameter(description = "字典项ID") @PathVariable Long id) {
         return Result.success(dictService.getItemById(id));
+    }
+
+    /**
+     * 查询某类型下全部启用中的字典项（供下拉选项与展示映射）
+     */
+    @OperationLog(action = "查询字典项选项")
+    @Operation(summary = "查询字典项选项", description = "按类型编码查询全部启用中的字典项，用于构建下拉选项与展示映射")
+    @GetMapping("/item/options")
+    public Result<List<DictItemVO>> getItemOptions(
+            @Parameter(description = "所属字典类型编码") @RequestParam String typeCode) {
+        return Result.success(dictService.getItemOptions(typeCode));
     }
 
     /**

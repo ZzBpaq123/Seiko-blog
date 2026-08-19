@@ -27,6 +27,8 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { toDateOnly } from "@/utils/date";
 
@@ -42,6 +44,7 @@ export default function ResourcesPage() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [togglingId, setTogglingId] = useState<number | null>(null);
   const debouncedSearch = useDebounce(search);
+  const { options: commonBooleanOptions } = useDictOptions("common_boolean");
 
   const { page, setPage, loading, pageResult, records, refresh, reset } = usePagedList<ResourceVO>({
     pageSize: PAGE_SIZE,
@@ -127,11 +130,7 @@ export default function ResourcesPage() {
           className="flex-3 min-w-0"
           value={statusFilter}
           onChange={(v) => setStatusFilter(String(v))}
-          options={[
-            { value: "", label: "全部状态" },
-            { value: "true", label: "已启用" },
-            { value: "false", label: "已停用" },
-          ]}
+          options={dictSelectOptions(commonBooleanOptions, "全部状态")}
         />
         <button
           type="button"
@@ -205,8 +204,8 @@ export default function ResourcesPage() {
                   </td>
                   <td className="max-w-xs truncate">{resource.description || "—"}</td>
                   <td>
-                    <span className={`badge ${resource.enabled ? "badge-green" : "badge-gray"}`}>
-                      {resource.enabled ? "已启用" : "已停用"}
+                    <span className={dictBadgeClass(commonBooleanOptions, resource.enabled)}>
+                      {dictLabel(commonBooleanOptions, resource.enabled)}
                     </span>
                   </td>
                   <td>{toDateOnly(resource.createTime) || "—"}</td>

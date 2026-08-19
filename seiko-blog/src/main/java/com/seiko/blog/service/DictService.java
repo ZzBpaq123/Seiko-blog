@@ -6,6 +6,8 @@ import com.seiko.blog.dto.DictTypeDTO;
 import com.seiko.blog.vo.DictItemVO;
 import com.seiko.blog.vo.DictTypeVO;
 
+import java.util.List;
+
 /**
  * 字典服务接口
  */
@@ -72,6 +74,14 @@ public interface DictService {
      * @return 字典项分页
      */
     Page<DictItemVO> getItemPage(long page, long size, String typeCode, String keyword, Boolean enabled);
+
+    /**
+     * 查询某类型下全部启用中的字典项（用于下拉选项与展示映射）
+     *
+     * @param typeCode 类型编码
+     * @return 启用中的字典项列表
+     */
+    List<DictItemVO> getItemOptions(String typeCode);
 
     /**
      * 查询字典项详情

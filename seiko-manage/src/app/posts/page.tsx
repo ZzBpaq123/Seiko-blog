@@ -12,15 +12,13 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const PAGE_SIZE = 10;
-
-function formatStatus(published?: boolean) {
-  return published ? "已发布" : "草稿";
-}
 
 export default function PostsPage() {
   const router = useRouter();
@@ -35,6 +33,7 @@ export default function PostsPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const debouncedSearch = useDebounce(search);
+  const { options: postStatusOptions } = useDictOptions("post_status");
 
   const { page, setPage, loading, pageResult, records, refresh, reset } = usePagedList<PostVO>({
     pageSize: PAGE_SIZE,
@@ -156,11 +155,7 @@ export default function PostsPage() {
             className="flex-2 min-w-0"
             value={statusFilter}
             onChange={(v) => setStatusFilter(String(v))}
-            options={[
-              { value: "", label: "全部状态" },
-              { value: "true", label: "已发布" },
-              { value: "false", label: "草稿" },
-            ]}
+            options={dictSelectOptions(postStatusOptions, "全部状态")}
         />
 
         {/* 重置按钮 */}
@@ -221,8 +216,8 @@ export default function PostsPage() {
                   </td>
                   <td>{post.readNum.toLocaleString("zh-CN")}</td>
                   <td>
-                    <span className={`badge ${post.published ? "badge-green" : "badge-yellow"}`}>
-                      {formatStatus(post.published)}
+                    <span className={dictBadgeClass(postStatusOptions, post.published)}>
+                      {dictLabel(postStatusOptions, post.published)}
                     </span>
                   </td>
                   <td>{post.date?.split(" ")[0] ?? "—"}</td>
@@ -289,8 +284,8 @@ export default function PostsPage() {
                 {detail.tags?.map((tag) => (
                   <span key={tag} className="badge badge-blue">{tag}</span>
                 ))}
-                <span className={`badge ${detail.published ? "badge-green" : "badge-yellow"}`}>
-                  {formatStatus(detail.published)}
+                <span className={dictBadgeClass(postStatusOptions, detail.published)}>
+                  {dictLabel(postStatusOptions, detail.published)}
                 </span>
               </div>
               <p className="text-sm text-gray-500 mb-4">

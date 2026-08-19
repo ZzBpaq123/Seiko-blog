@@ -9,6 +9,8 @@ import CalendarPicker from "@/components/CalendarPicker";
 import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictFormOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import type { FootprintCreateDTO, FootprintVO } from "@/types";
 import { MapPin } from "lucide-react";
@@ -31,6 +33,7 @@ export default function FootprintForm({ mode }: { mode: "new" | "edit" }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerVersion, setPickerVersion] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const { options: footprintTypeOptions } = useDictOptions("footprint_type");
 
   const { loading } = useEntityLoad<FootprintVO>({
     enabled: mode === "edit",
@@ -171,10 +174,7 @@ export default function FootprintForm({ mode }: { mode: "new" | "edit" }) {
                 <Select
                   value={footprintType}
                   onChange={(v) => setFootprintType(String(v))}
-                  options={[
-                    { value: "domestic", label: "国内" },
-                    { value: "international", label: "国际" },
-                  ]}
+                  options={dictFormOptions(footprintTypeOptions)}
                 />
               </div>
             </div>

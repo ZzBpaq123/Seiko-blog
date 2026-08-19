@@ -7,6 +7,8 @@ import ImageUpload from "@/components/ImageUpload";
 import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictFormOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import type { UserDTO, UserVO } from "@/types";
 
@@ -29,6 +31,8 @@ export default function UserForm({ mode }: { mode: "new" | "edit" }) {
   const [userRole, setUserRole] = useState("user");
   const [userStatus, setUserStatus] = useState("active");
   const [submitting, setSubmitting] = useState(false);
+  const { options: userRoleOptions } = useDictOptions("user_role");
+  const { options: userStatusOptions } = useDictOptions("user_status");
 
   const { loading } = useEntityLoad<UserVO>({
     enabled: isEdit,
@@ -151,19 +155,13 @@ export default function UserForm({ mode }: { mode: "new" | "edit" }) {
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1.5">角色</label>
                 <Select value={userRole} onChange={(v) => setUserRole(String(v))}
-                  options={[
-                    { value: "user", label: "普通用户" },
-                    { value: "admin", label: "管理员" },
-                  ]}
+                  options={dictFormOptions(userRoleOptions)}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1.5">状态</label>
                 <Select value={userStatus} onChange={(v) => setUserStatus(String(v))}
-                  options={[
-                    { value: "active", label: "正常" },
-                    { value: "inactive", label: "禁用" },
-                  ]}
+                  options={dictFormOptions(userStatusOptions)}
                 />
               </div>
             </div>

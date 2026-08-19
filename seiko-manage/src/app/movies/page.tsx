@@ -16,6 +16,8 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
 const PAGE_SIZE = 10;
@@ -29,6 +31,7 @@ export default function MoviesPage() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [togglingId, setTogglingId] = useState<number | null>(null);
   const debouncedSearch = useDebounce(search);
+  const { options: movieTopOptions } = useDictOptions("movie_top");
 
   const { page, setPage, loading, pageResult, records: rawRecords, refresh, reset } =
     usePagedList<MovieVO>({
@@ -112,11 +115,7 @@ export default function MoviesPage() {
           className="flex-3 min-w-0"
           value={topFilter}
           onChange={(v) => setTopFilter(String(v))}
-          options={[
-            { value: "", label: "全部" },
-            { value: "1", label: "置顶" },
-            { value: "0", label: "普通" },
-          ]}
+          options={dictSelectOptions(movieTopOptions, "全部")}
         />
         <button
           type="button"
@@ -143,8 +142,8 @@ export default function MoviesPage() {
             <div key={movie.id} className="card p-4 hover:shadow-md transition-shadow group relative">
               {movie.isTop === 1 && (
                 <div className="absolute top-3 right-3 z-10">
-                  <span className="badge badge-yellow flex items-center gap-1">
-                    <Star size={10} /> 置顶
+                  <span className={`${dictBadgeClass(movieTopOptions, movie.isTop)} flex items-center gap-1`}>
+                    <Star size={10} /> {dictLabel(movieTopOptions, movie.isTop)}
                   </span>
                 </div>
               )}

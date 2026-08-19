@@ -8,46 +8,10 @@ import Select from "@/components/Select";
 import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { usePagedList } from "@/hooks/usePagedList";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
 
 const PAGE_SIZE = 10;
-
-const LOG_TYPE_OPTIONS = [
-  { value: "", label: "全部类型" },
-  { value: "operation", label: "操作日志" },
-  { value: "login", label: "登录日志" },
-  { value: "error", label: "错误日志" },
-  { value: "security", label: "安全日志" },
-];
-
-function logTypeMeta(type: string): { label: string; badge: string } {
-  switch (type) {
-    case "operation":
-      return { label: "操作日志", badge: "badge badge-blue" };
-    case "login":
-      return { label: "登录日志", badge: "badge badge-green" };
-    case "error":
-      return { label: "错误日志", badge: "badge badge-red" };
-    case "security":
-      return { label: "安全日志", badge: "badge badge-yellow" };
-    default:
-      return { label: type || "—", badge: "badge badge-gray" };
-  }
-}
-
-function logLevelMeta(level: string): { label: string; badge: string } {
-  switch (level) {
-    case "DEBUG":
-      return { label: "调试", badge: "badge badge-gray" };
-    case "INFO":
-      return { label: "信息", badge: "badge badge-blue" };
-    case "WARN":
-      return { label: "警告", badge: "badge badge-yellow" };
-    case "ERROR":
-      return { label: "错误", badge: "badge badge-red" };
-    default:
-      return { label: level || "—", badge: "badge badge-gray" };
-  }
-}
 
 function prettyJson(value?: string): string {
   if (!value) return "";
@@ -61,6 +25,9 @@ function prettyJson(value?: string): string {
 export default function LogsPage() {
   const [typeFilter, setTypeFilter] = useState("");
   const [detail, setDetail] = useState<LogVO | null>(null);
+  const { options: logTypeOptions } = useDictOptions("log_type");
+  const { options: logLevelOptions } = useDictOptions("log_level");
+  const { options: logStatusOptions } = useDictOptions("log_status");
 
   const { page, setPage, loading, pageResult, records, reset } = usePagedList<LogVO>({
     pageSize: PAGE_SIZE,
@@ -88,7 +55,7 @@ export default function LogsPage() {
           className="flex-3 min-w-0"
           value={typeFilter}
           onChange={(v) => setTypeFilter(String(v))}
-          options={LOG_TYPE_OPTIONS}
+          options={dictSelectOptions(logTypeOptions, "全部类型")}
         />
         <button
           type="button"
@@ -136,15 +103,17 @@ export default function LogsPage() {
               </tr>
             ) : (
               records.map((log) => {
-                const type = logTypeMeta(log.logType);
-                const level = logLevelMeta(log.logLevel);
                 return (
                   <tr key={log.id}>
                     <td>
-                      <span className={type.badge}>{type.label}</span>
+                      <span className={dictBadgeClass(logTypeOptions, log.logType)}>
+                        {dictLabel(logTypeOptions, log.logType)}
+                      </span>
                     </td>
                     <td>
-                      <span className={level.badge}>{level.label}</span>
+                      <span className={dictBadgeClass(logLevelOptions, log.logLevel)}>
+                        {dictLabel(logLevelOptions, log.logLevel)}
+                      </span>
                     </td>
                     <td className="max-w-xs">
                       <div className="truncate font-medium text-foreground" title={log.action}>
@@ -169,10 +138,8 @@ export default function LogsPage() {
                       </div>
                     </td>
                     <td>
-                      <span
-                        className={`badge ${log.status === 1 ? "badge-red" : "badge-green"}`}
-                      >
-                        {log.status === 1 ? "异常" : "正常"}
+                      <span className={dictBadgeClass(logStatusOptions, log.status)}>
+                        {dictLabel(logStatusOptions, log.status)}
                       </span>
                     </td>
                     <td>{log.costTime != null ? `${log.costTime} ms` : "—"}</td>
@@ -214,14 +181,14 @@ export default function LogsPage() {
             <div className="px-6 py-4 overflow-y-auto flex-1 space-y-5 text-sm">
               {/* 概览 */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className={logTypeMeta(detail.logType).badge}>
-                  {logTypeMeta(detail.logType).label}
+                <span className={dictBadgeClass(logTypeOptions, detail.logType)}>
+                  {dictLabel(logTypeOptions, detail.logType)}
                 </span>
-                <span className={logLevelMeta(detail.logLevel).badge}>
-                  {logLevelMeta(detail.logLevel).label}
+                <span className={dictBadgeClass(logLevelOptions, detail.logLevel)}>
+                  {dictLabel(logLevelOptions, detail.logLevel)}
                 </span>
-                <span className={`badge ${detail.status === 1 ? "badge-red" : "badge-green"}`}>
-                  {detail.status === 1 ? "异常" : "正常"}
+                <span className={dictBadgeClass(logStatusOptions, detail.status)}>
+                  {dictLabel(logStatusOptions, detail.status)}
                 </span>
                 <span className="text-gray-500">{detail.createTime}</span>
               </div>

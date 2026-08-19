@@ -61,6 +61,11 @@ export async function getDictItemById(id: number): Promise<DictItemVO> {
   return get<DictItemVO>(`/manage/dict/item/${id}`);
 }
 
+/** 查询某类型全部启用中的字典项（用于下拉选项与展示映射） */
+export async function getDictItemOptions(typeCode: string): Promise<DictItemVO[]> {
+  return get<DictItemVO[]>("/manage/dict/item/options", { params: { typeCode } });
+}
+
 /** 新建字典项（管理端） */
 export async function createDictItem(data: DictItemDTO): Promise<number> {
   return post<number>("/manage/dict/item", data);

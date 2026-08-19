@@ -26,6 +26,8 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
 const PAGE_SIZE = 10;
@@ -42,6 +44,8 @@ export default function UsersPage() {
   const [togglingId, setTogglingId] = useState<number | null>(null);
   const debouncedSearch = useDebounce(search);
   const debouncedEmail = useDebounce(emailSearch);
+  const { options: userRoleOptions } = useDictOptions("user_role");
+  const { options: userStatusOptions } = useDictOptions("user_status");
 
   const { page, setPage, loading, pageResult, records, refresh, reset } = usePagedList<UserVO>({
     pageSize: PAGE_SIZE,
@@ -130,18 +134,10 @@ export default function UsersPage() {
           />
         </div>
         <Select className="flex-3 min-w-0" value={roleFilter} onChange={(v) => setRoleFilter(String(v))}
-          options={[
-            { value: "", label: "全部角色" },
-            { value: "admin", label: "管理员" },
-            { value: "user", label: "普通用户" },
-          ]}
+          options={dictSelectOptions(userRoleOptions, "全部角色")}
         />
         <Select className="flex-3 min-w-0" value={statusFilter} onChange={(v) => setStatusFilter(String(v))}
-          options={[
-            { value: "", label: "全部状态" },
-            { value: "active", label: "正常" },
-            { value: "inactive", label: "已禁用" },
-          ]}
+          options={dictSelectOptions(userStatusOptions, "全部状态")}
         />
         <button
           type="button"
@@ -207,32 +203,25 @@ export default function UsersPage() {
                   <td>{user.username}</td>
                   <td className="text-gray-500">{user.email || "—"}</td>
                   <td>
-                    <span className={`badge ${user.userRole === "admin" ? "badge-red" : "badge-blue"}`}>
-                      {user.userRole === "admin" ? (
-                        <span className="flex items-center gap-1">
-                          <Shield size={10} /> 管理员
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1">
-                          <User size={10} /> 用户
-                        </span>
-                      )}
+                    <span className={dictBadgeClass(userRoleOptions, user.userRole)}>
+                      <span className="flex items-center gap-1">
+                        {user.userRole === "admin" ? <Shield size={10} /> : <User size={10} />}
+                        {dictLabel(userRoleOptions, user.userRole)}
+                      </span>
                     </span>
                   </td>
                   <td>
                     <button
                       type="button"
-                      className={`badge ${user.userStatus === "active" ? "badge-green" : "badge-gray"} cursor-pointer disabled:opacity-50`}
+                      className={`${dictBadgeClass(userStatusOptions, user.userStatus)} cursor-pointer disabled:opacity-50`}
                       title="点击切换状态"
                       onClick={() => handleToggleStatus(user)}
                       disabled={togglingId === user.id}
                     >
                       {togglingId === user.id ? (
                         <Loader2 size={10} className="animate-spin" />
-                      ) : user.userStatus === "active" ? (
-                        "正常"
                       ) : (
-                        "已禁用"
+                        dictLabel(userStatusOptions, user.userStatus)
                       )}
                     </button>
                   </td>

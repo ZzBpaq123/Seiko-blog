@@ -16,6 +16,8 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
+import { useDictOptions } from "@/hooks/useDict";
+import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { toDateOnly } from "@/utils/date";
 
@@ -30,6 +32,7 @@ export default function NoticesPage() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [togglingId, setTogglingId] = useState<number | null>(null);
   const debouncedSearch = useDebounce(search);
+  const { options: commonBooleanOptions } = useDictOptions("common_boolean");
 
   const { page, setPage, loading, pageResult, records, refresh, reset } = usePagedList<NoticeVO>({
     pageSize: PAGE_SIZE,
@@ -106,11 +109,7 @@ export default function NoticesPage() {
           className="flex-3 min-w-0"
           value={statusFilter}
           onChange={(v) => setStatusFilter(String(v))}
-          options={[
-            { value: "", label: "全部状态" },
-            { value: "true", label: "已启用" },
-            { value: "false", label: "已停用" },
-          ]}
+          options={dictSelectOptions(commonBooleanOptions, "全部状态")}
         />
         <button
           type="button"
@@ -159,8 +158,8 @@ export default function NoticesPage() {
                   <td className="font-medium text-foreground">{notice.noticeTitle}</td>
                   <td className="max-w-xs truncate">{notice.noticeContent || "—"}</td>
                   <td>
-                    <span className={`badge ${notice.enabled ? "badge-green" : "badge-gray"}`}>
-                      {notice.enabled ? "已启用" : "已停用"}
+                    <span className={dictBadgeClass(commonBooleanOptions, notice.enabled)}>
+                      {dictLabel(commonBooleanOptions, notice.enabled)}
                     </span>
                   </td>
                   <td>{toDateOnly(notice.createTime) || "—"}</td>
