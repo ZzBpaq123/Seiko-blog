@@ -17,8 +17,11 @@ export function useDictOptions(typeCode: string) {
       .then((items) => {
         if (!cancelled) setOptions(items);
       })
-      .catch(() => {
-        if (!cancelled) setOptions([]);
+      .catch((err) => {
+        if (!cancelled) {
+          console.error(`[dict] 加载字典 ${typeCode} 失败`, err);
+          setOptions([]);
+        }
       });
     return () => {
       cancelled = true;
