@@ -3,44 +3,36 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRight, Home } from "lucide-react";
+import { navItems } from "@/config/navigation";
 
-/** 路径段到中文名称的映射 */
-const SEGMENT_LABELS: Record<string, string> = {
-  posts: "文章管理",
-  tags: "标签管理",
-  comments: "评论管理",
-  footprints: "足迹管理",
-  photos: "相册管理",
-  notices: "公告管理",
-  books: "书籍管理",
-  movies: "电影管理",
-  resources: "资源管理",
-  users: "用户管理",
-  logs: "日志管理",
-  dicts: "字典管理",
+/** 非菜单页面的路径段中文名（新建/编辑等操作页） */
+const EXTRA_SEGMENT_LABELS: Record<string, string> = {
   album: "相册",
   photo: "照片",
   new: "新建",
   edit: "编辑",
 };
 
-/** 二级菜单页面的上级分组（无真实路由，仅作为面包屑层级展示） */
-const GROUP_PARENTS: Record<string, string> = {
-  logs: "系统管理",
-  dicts: "系统管理",
-};
+/** 从菜单配置推导：路径段 → 中文名 */
+const SEGMENT_LABELS: Record<string, string> = { ...EXTRA_SEGMENT_LABELS };
+/** 从菜单配置推导：二级路径段 → 上级分组名（无真实路由，仅作层级展示） */
+const PARENT_LABELS: Record<string, string> = {};
+/** 从菜单配置推导：可作为中间层级点击跳转的页面路径 */
+const NAVIGABLE = new Set<string>();
 
-/** 可点击跳转的列表页路径（其余段仅作展示） */
-const NAVIGABLE = new Set([
-  "/posts",
-  "/comments",
-  "/footprints",
-  "/photos",
-  "/notices",
-  "/books",
-  "/movies",
-  "/users",
-]);
+navItems.forEach((item) => {
+  if (item.href) {
+    NAVIGABLE.add(item.href);
+    const segment = item.href.split("/").filter(Boolean).pop()!;
+    SEGMENT_LABELS[segment] = item.label;
+  }
+  item.children?.forEach((child) => {
+    NAVIGABLE.add(child.href);
+    const segment = child.href.split("/").filter(Boolean).pop()!;
+    SEGMENT_LABELS[segment] = child.label;
+    PARENT_LABELS[segment] = item.label;
+  });
+});
 
 interface Crumb {
   id: string;
@@ -58,10 +50,10 @@ export default function Breadcrumb() {
   segments.forEach((seg, index) => {
     acc += `/${seg}`;
     const isLast = index === segments.length - 1;
-    if (isLast && GROUP_PARENTS[seg]) {
+    if (isLast && PARENT_LABELS[seg]) {
       crumbs.push({
         id: `group-${acc}`,
-        label: GROUP_PARENTS[seg],
+        label: PARENT_LABELS[seg],
         href: "",
         isLink: false,
       });

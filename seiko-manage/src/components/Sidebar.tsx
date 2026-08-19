@@ -3,59 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import {
-  LayoutDashboard,
-  FileText,
-  Tag,
-  MessageSquare,
-  MapPin,
-  Image as ImageIcon,
-  Megaphone,
-  BookOpen,
-  Film,
-  Users,
-  Link2,
-  ScrollText,
-  BookMarked,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-
-interface NavChild {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-}
-
-interface NavItem {
-  label: string;
-  href?: string;
-  icon: React.ReactNode;
-  children?: NavChild[];
-}
-
-const navItems: NavItem[] = [
-  { label: "仪表盘", href: "/", icon: <LayoutDashboard size={18} /> },
-  { label: "文章管理", href: "/posts", icon: <FileText size={18} /> },
-  { label: "标签管理", href: "/tags", icon: <Tag size={18} /> },
-  { label: "评论管理", href: "/comments", icon: <MessageSquare size={18} /> },
-  { label: "足迹管理", href: "/footprints", icon: <MapPin size={18} /> },
-  { label: "相册管理", href: "/photos", icon: <ImageIcon size={18} /> },
-  { label: "公告管理", href: "/notices", icon: <Megaphone size={18} /> },
-  { label: "书籍管理", href: "/books", icon: <BookOpen size={18} /> },
-  { label: "电影管理", href: "/movies", icon: <Film size={18} /> },
-  { label: "资源管理", href: "/resources", icon: <Link2 size={18} /> },
-  {
-    label: "系统管理",
-    icon: <Settings size={18} />,
-    children: [
-      { label: "用户管理", href: "/users", icon: <Users size={18} /> },
-      { label: "字典管理", href: "/dicts", icon: <BookMarked size={18} /> },
-      { label: "日志管理", href: "/logs", icon: <ScrollText size={18} /> },
-    ],
-  },
-];
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { navItems, type NavItem } from "@/config/navigation";
 
 const isPathActive = (href: string, pathname: string) =>
   pathname === href || pathname.startsWith(`${href}/`);
@@ -104,7 +53,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             }`}
             title={collapsed ? item.label : undefined}
           >
-            <span className="shrink-0">{item.icon}</span>
+            <span className="shrink-0">{<item.icon size={18} />}</span>
             <span
               className={`whitespace-nowrap transition-[opacity,transform] duration-300 ease-in-out ${
                 collapsed ? labelHiddenClass : labelVisibleClass
@@ -127,7 +76,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           }`}
           title={collapsed ? item.label : undefined}
         >
-          <span className="shrink-0">{item.icon}</span>
+          <span className="shrink-0">{<item.icon size={18} />}</span>
           <span
             className={`whitespace-nowrap transition-[opacity,transform] duration-300 ease-in-out ${
               collapsed ? labelHiddenClass : labelVisibleClass
@@ -156,7 +105,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                     } ${isActive ? rowActiveClass : rowIdleClass}`}
                     title={collapsed ? child.label : undefined}
                   >
-                    <span className="shrink-0">{child.icon}</span>
+                    <span className="shrink-0">{<child.icon size={18} />}</span>
                     <span
                       className={`whitespace-nowrap transition-[opacity,transform] duration-300 ease-in-out ${
                         collapsed ? labelHiddenClass : labelVisibleClass
