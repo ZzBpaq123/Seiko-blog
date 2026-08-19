@@ -399,3 +399,63 @@ export interface LogVO {
   /** 创建时间，格式 yyyy-MM-dd HH:mm:ss */
   createTime: string;
 }
+
+// ─── Dict ───
+
+/** 字典类型 VO，对应后端 DictTypeVO */
+export interface DictTypeVO {
+  id: number;
+  /** 字典类型编码，如 common_status */
+  typeCode: string;
+  /** 字典类型名称，如 通用状态 */
+  typeName: string;
+  /** 备注 */
+  remark?: string;
+  /** 是否启用 */
+  enabled: boolean;
+  /** 排序 */
+  sortOrder: number;
+  /** 字典项数量 */
+  itemCount?: number;
+  createTime: string;
+}
+
+/** 字典项 VO，对应后端 DictItemVO */
+export interface DictItemVO {
+  id: number;
+  /** 所属字典类型编码 */
+  typeCode: string;
+  /** 展示文案 */
+  itemLabel: string;
+  /** 存储值 */
+  itemValue: string;
+  /** 标签样式: green/red/yellow/blue/gray */
+  itemTag?: string;
+  /** 是否默认项 */
+  isDefault?: boolean;
+  /** 是否启用 */
+  enabled: boolean;
+  /** 排序 */
+  sortOrder: number;
+  createTime: string;
+}
+
+/** 新建/编辑字典类型请求体，对应后端 DictTypeDTO */
+export interface DictTypeDTO {
+  typeCode: string;
+  typeName: string;
+  remark?: string;
+  enabled?: boolean;
+  sortOrder?: number;
+}
+
+/** 新建/编辑字典项请求体，对应后端 DictItemDTO */
+export interface DictItemDTO {
+  typeCode: string;
+  itemLabel: string;
+  itemValue: string;
+  itemTag?: string;
+  isDefault?: boolean;
+  enabled?: boolean;
+  sortOrder?: number;
+}

@@ -15,6 +15,7 @@ import {
   Users,
   Link2,
   ScrollText,
+  BookMarked,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -38,6 +39,7 @@ const navItems: NavItem[] = [
   { label: "资源管理", href: "/resources", icon: <Link2 size={18} /> },
   { label: "用户管理", href: "/users", icon: <Users size={18} /> },
   { label: "日志管理", href: "/logs", icon: <ScrollText size={18} /> },
+  { label: "字典管理", href: "/dicts", icon: <BookMarked size={18} /> },
 ];
 
 interface SidebarProps {
