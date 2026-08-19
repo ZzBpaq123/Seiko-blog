@@ -6,7 +6,7 @@ import { createResource, getResourceById, updateResource } from "@/api/resource"
 import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { ResourceDTO, ResourceVO } from "@/types";
 
 /** 资源分类预设 */
@@ -25,7 +25,7 @@ export default function ResourceForm({ mode }: { mode: "new" | "edit" }) {
   const [enabled, setEnabled] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<ResourceVO>({
+  const { loading } = useEntityLoad<ResourceVO>({
     enabled: mode === "edit",
     id,
     loader: getResourceById,
@@ -64,6 +64,7 @@ export default function ResourceForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (mode === "new") await createResource(payload);
       else await updateResource(id, payload);
+      notifySuccess(mode === "new" ? "资源创建成功" : "资源更新成功");
       router.push("/resources");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -79,7 +80,6 @@ export default function ResourceForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
     >
       <div className="card space-y-4">
         <div>

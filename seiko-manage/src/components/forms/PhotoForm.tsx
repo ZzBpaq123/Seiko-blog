@@ -8,7 +8,7 @@ import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import CalendarPicker from "@/components/CalendarPicker";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { AlbumVO, PhotoCreateDTO, PhotoVO } from "@/types";
 
 export default function PhotoForm({ mode }: { mode: "new" | "edit" }) {
@@ -62,7 +62,7 @@ export default function PhotoForm({ mode }: { mode: "new" | "edit" }) {
     };
   }, [isEdit]);
 
-  const { loading: photoLoading, loadError } = useEntityLoad<PhotoVO>({
+  const { loading: photoLoading } = useEntityLoad<PhotoVO>({
     enabled: isEdit,
     id,
     loader: getPhotoById,
@@ -129,6 +129,7 @@ export default function PhotoForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (isEdit) await updatePhoto(id, payload);
       else await createPhoto(payload);
+      notifySuccess(isEdit ? "照片更新成功" : "照片上传成功");
       router.push("/photos");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -144,7 +145,6 @@ export default function PhotoForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={isEdit ? photoLoading || albumsLoading : false}
-      loadError={loadError}
     >
       {!albumsLoading && albums.length === 0 && (
         <div className="card border-amber-200 bg-amber-50 text-amber-700 text-sm py-3">

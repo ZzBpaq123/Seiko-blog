@@ -7,7 +7,7 @@ import ImageUpload from "@/components/ImageUpload";
 import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { UserDTO, UserVO } from "@/types";
 
 const AVATAR_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444", "#14b8a6"];
@@ -89,6 +89,7 @@ export default function UserForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (isEdit) await updateUser(id, payload);
       else await createUser(payload);
+      notifySuccess(isEdit ? "用户更新成功" : "用户创建成功");
       router.push("/users");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -104,7 +105,6 @@ export default function UserForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
     >
       <div className="card space-y-4">
         <div className="flex gap-4">

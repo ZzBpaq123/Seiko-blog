@@ -12,7 +12,7 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 
 const PAGE_SIZE = 10;
 
@@ -74,6 +74,7 @@ export default function FootprintsPage() {
     setDeletingId(id);
     try {
       await deleteFootprint(id);
+      notifySuccess("足迹删除成功");
       refresh();
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "删除失败");

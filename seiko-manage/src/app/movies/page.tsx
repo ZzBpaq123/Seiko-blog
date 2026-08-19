@@ -16,7 +16,7 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 
 const PAGE_SIZE = 10;
 
@@ -61,6 +61,7 @@ export default function MoviesPage() {
     setDeletingId(id);
     try {
       await deleteMovie(id);
+      notifySuccess("电影删除成功");
       refresh();
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "删除失败");
@@ -75,6 +76,7 @@ export default function MoviesPage() {
     setTogglingId(movie.id);
     try {
       await updateMovieTopStatus(movie.id, next);
+      notifySuccess("置顶状态更新成功");
       refresh();
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "状态更新失败");

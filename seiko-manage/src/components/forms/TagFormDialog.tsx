@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2, Tag } from "lucide-react";
 import { createTag, updateTag } from "@/api/tag";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { TagDTO, TagVO } from "@/types";
 
 interface TagFormDialogProps {
@@ -68,6 +68,7 @@ function TagForm({
     try {
       if (tag) await updateTag(tag.id, payload);
       else await createTag(payload);
+      notifySuccess(tag ? "标签更新成功" : "标签创建成功");
       onSaved();
       onClose();
     } catch (err) {

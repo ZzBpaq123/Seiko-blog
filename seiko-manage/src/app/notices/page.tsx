@@ -16,7 +16,7 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import { toDateOnly } from "@/utils/date";
 
 const PAGE_SIZE = 10;
@@ -54,6 +54,7 @@ export default function NoticesPage() {
     setTogglingId(notice.id);
     try {
       await updateNoticeEnabled(notice.id, !notice.enabled);
+      notifySuccess("公告状态更新成功");
       refresh();
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "操作失败");
@@ -69,6 +70,7 @@ export default function NoticesPage() {
     setDeletingId(id);
     try {
       await deleteNotice(id);
+      notifySuccess("公告删除成功");
       refresh();
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "删除失败");

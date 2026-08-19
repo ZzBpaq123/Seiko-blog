@@ -7,7 +7,7 @@ import ImageUpload from "@/components/ImageUpload";
 import FormScaffold from "@/components/FormScaffold";
 import CalendarPicker from "@/components/CalendarPicker";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { AlbumCreateDTO, AlbumVO } from "@/types";
 
 export default function AlbumForm({ mode }: { mode: "new" | "edit" }) {
@@ -21,7 +21,7 @@ export default function AlbumForm({ mode }: { mode: "new" | "edit" }) {
   const [albumTime, setAlbumTime] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<AlbumVO>({
+  const { loading } = useEntityLoad<AlbumVO>({
     enabled: mode === "edit",
     id,
     loader: getAlbumById,
@@ -52,6 +52,7 @@ export default function AlbumForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (mode === "new") await createAlbum(payload);
       else await updateAlbum(id, payload);
+      notifySuccess(mode === "new" ? "相册创建成功" : "相册更新成功");
       router.push("/photos");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -67,7 +68,6 @@ export default function AlbumForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
     >
       <div className="card space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

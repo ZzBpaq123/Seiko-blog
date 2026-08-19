@@ -9,7 +9,7 @@ import CalendarPicker from "@/components/CalendarPicker";
 import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { FootprintCreateDTO, FootprintVO } from "@/types";
 import { MapPin } from "lucide-react";
 
@@ -32,7 +32,7 @@ export default function FootprintForm({ mode }: { mode: "new" | "edit" }) {
   const [pickerVersion, setPickerVersion] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<FootprintVO>({
+  const { loading } = useEntityLoad<FootprintVO>({
     enabled: mode === "edit",
     id,
     loader: getFootprintById,
@@ -91,6 +91,7 @@ export default function FootprintForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (mode === "new") await createFootprint(payload);
       else await updateFootprint(id, payload);
+      notifySuccess(mode === "new" ? "足迹添加成功" : "足迹更新成功");
       router.push("/footprints");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -106,7 +107,6 @@ export default function FootprintForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
     >
       <div className="card space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">

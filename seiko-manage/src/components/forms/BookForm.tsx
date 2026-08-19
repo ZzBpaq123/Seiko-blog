@@ -6,7 +6,7 @@ import { createBook, getBookById, updateBook } from "@/api/book";
 import ImageUpload from "@/components/ImageUpload";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { BookDTO, BookVO } from "@/types";
 
 export default function BookForm({ mode }: { mode: "new" | "edit" }) {
@@ -20,7 +20,7 @@ export default function BookForm({ mode }: { mode: "new" | "edit" }) {
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<BookVO>({
+  const { loading } = useEntityLoad<BookVO>({
     enabled: mode === "edit",
     id,
     loader: getBookById,
@@ -51,6 +51,7 @@ export default function BookForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (mode === "new") await createBook(payload);
       else await updateBook(id, payload);
+      notifySuccess(mode === "new" ? "书籍添加成功" : "书籍更新成功");
       router.push("/books");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -66,7 +67,6 @@ export default function BookForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
     >
       <div className="card space-y-4">
         <div className="flex gap-4">

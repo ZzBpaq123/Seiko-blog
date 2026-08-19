@@ -26,7 +26,7 @@ import Select from "@/components/Select";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import { toDateOnly } from "@/utils/date";
 
 const PAGE_SIZE = 10;
@@ -111,6 +111,7 @@ export default function PhotosPage() {
     setDeletingId(id);
     try {
       await deleteAlbum(id);
+      notifySuccess("相册删除成功");
       setAlbumRefreshKey((k) => k + 1);
       refreshPhotos();
     } catch (err) {
@@ -127,6 +128,7 @@ export default function PhotosPage() {
     setDeletingId(id);
     try {
       await deletePhoto(id);
+      notifySuccess("照片删除成功");
       refreshPhotos();
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "删除失败");

@@ -12,7 +12,7 @@ import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -99,6 +99,7 @@ export default function PostsPage() {
     setDeletingId(id);
     try {
       await deletePost(id);
+      notifySuccess("文章删除成功");
       refresh();
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "删除失败");

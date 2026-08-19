@@ -8,7 +8,7 @@ import TagMultiSelect from "@/components/TagMultiSelect";
 import MarkdownSplitEditor from "@/components/MarkdownSplitEditor";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { PostCreateDTO, PostVO } from "@/types";
 
 /** 由标题生成 URL 友好的 slug：保留中英文与数字，空白与符号转为短横线 */
@@ -38,7 +38,7 @@ export default function PostForm({ mode }: { mode: "new" | "edit" }) {
   const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<PostVO>({
+  const { loading } = useEntityLoad<PostVO>({
     enabled: mode === "edit",
     id,
     loader: getPostById,
@@ -93,6 +93,7 @@ export default function PostForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (mode === "new") await createPost(payload);
       else await updatePost(id, payload);
+      notifySuccess(mode === "new" ? "文章发布成功" : "文章更新成功");
       router.push("/posts");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -108,7 +109,6 @@ export default function PostForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
       headerExtra={
         <label className="flex items-center gap-2 text-sm text-gray-600 mr-2">
           <input

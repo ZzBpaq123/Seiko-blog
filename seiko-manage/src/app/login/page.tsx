@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Sparkles, User, Lock } from "lucide-react";
 import { login } from "@/api/user";
 import { ApiBusinessError } from "@/utils/request";
+import { notifyError, notifySuccess } from "@/utils/toast";
 
 interface PupilProps {
   size?: number;
@@ -138,7 +139,6 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isPurpleBlinking, setIsPurpleBlinking] = useState(false);
   const [isBlackBlinking, setIsBlackBlinking] = useState(false);
@@ -286,15 +286,15 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setIsLoading(true);
     try {
       await login({ username: username.trim(), password });
+      notifySuccess("登录成功");
       router.replace("/");
     } catch (err) {
       const message =
         err instanceof ApiBusinessError ? err.message : "登录失败，请稍后重试";
-      setError(message);
+      notifyError(message);
     } finally {
       setIsLoading(false);
     }
@@ -706,12 +706,6 @@ export default function LoginPage() {
                 忘记密码？
               </a>
             </div>
-
-            {error && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
-                {error}
-              </div>
-            )}
 
             <button
               type="submit"

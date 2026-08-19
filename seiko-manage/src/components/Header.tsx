@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { logout, getStoredUser, resetUserPassword } from "@/api/user";
 import { usePrompt } from "@/components/PromptDialog";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import Breadcrumb from "./Breadcrumb";
 
 const THEME_COLORS = [
@@ -145,6 +145,7 @@ export default function Header() {
     setResettingPassword(true);
     try {
       await resetUserPassword(currentUser.id, newPassword);
+      notifySuccess("密码重置成功");
       setShowUserMenu(false);
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "密码重置失败");

@@ -6,7 +6,7 @@ import { createNotice, getNoticeById, updateNotice } from "@/api/notice";
 import Select from "@/components/Select";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { NoticeDTO, NoticeVO } from "@/types";
 
 export default function NoticeForm({ mode }: { mode: "new" | "edit" }) {
@@ -21,7 +21,7 @@ export default function NoticeForm({ mode }: { mode: "new" | "edit" }) {
   const [enabled, setEnabled] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<NoticeVO>({
+  const { loading } = useEntityLoad<NoticeVO>({
     enabled: mode === "edit",
     id,
     loader: getNoticeById,
@@ -54,6 +54,7 @@ export default function NoticeForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (mode === "new") await createNotice(payload);
       else await updateNotice(id, payload);
+      notifySuccess(mode === "new" ? "公告创建成功" : "公告更新成功");
       router.push("/notices");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -69,7 +70,6 @@ export default function NoticeForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
     >
       <div className="card space-y-4">
         <div>

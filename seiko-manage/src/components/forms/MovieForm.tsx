@@ -6,7 +6,7 @@ import { createMovie, getMovieById, updateMovie } from "@/api/movie";
 import ImageUpload from "@/components/ImageUpload";
 import FormScaffold from "@/components/FormScaffold";
 import { useEntityLoad } from "@/hooks/useEntityForm";
-import { notifyError } from "@/utils/toast";
+import { notifyError, notifySuccess } from "@/utils/toast";
 import type { MovieDTO, MovieVO } from "@/types";
 
 export default function MovieForm({ mode }: { mode: "new" | "edit" }) {
@@ -24,7 +24,7 @@ export default function MovieForm({ mode }: { mode: "new" | "edit" }) {
   const [isTop, setIsTop] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
-  const { loading, loadError } = useEntityLoad<MovieVO>({
+  const { loading } = useEntityLoad<MovieVO>({
     enabled: mode === "edit",
     id,
     loader: getMovieById,
@@ -68,6 +68,7 @@ export default function MovieForm({ mode }: { mode: "new" | "edit" }) {
     try {
       if (mode === "new") await createMovie(payload);
       else await updateMovie(id, payload);
+      notifySuccess(mode === "new" ? "电影添加成功" : "电影更新成功");
       router.push("/movies");
     } catch (err) {
       notifyError(err instanceof Error ? err.message : "保存失败");
@@ -83,7 +84,6 @@ export default function MovieForm({ mode }: { mode: "new" | "edit" }) {
       submitting={submitting}
       onSubmit={handleSubmit}
       loading={loading}
-      loadError={loadError}
     >
       <div className="card space-y-4">
         <div className="flex gap-4">
