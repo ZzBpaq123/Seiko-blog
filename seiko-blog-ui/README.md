@@ -37,7 +37,7 @@ Seiko Blog 的公开前台，基于 Next.js 16 + React 19 构建，采用 App Ro
 - **关于我 `/about/myself`** - 全屏水平滑动四屏交互页：Hero、活跃度日历热力图（GitHub 风格 52 周）、个人介绍、作品展示；支持滚轮 / 方向键 / 右侧指示器切换
 - **足迹 `/footprint`** - 高德地图展示旅行足迹，支持国内 / 国际筛选
 - **相册 `/gallery`** - 星空入场动画 → 选择相册 → 照片网格（分阶段交互动画 + 图片灯箱）
-- **探索页** - `/explore/book`、`/explore/movie` 使用后端 API；`/explore/game`、`/explore/ranking` 使用静态数据
+- **探索页** - `/explore/book`、`/explore/movie` 使用后端 API；`/explore/game` 使用静态数据
 
 ### 数据获取方式
 
@@ -75,7 +75,6 @@ seiko-blog-ui/
 │   │       ├── book/                 # 书籍（后端 API，ISR）
 │   │       ├── movie/                # 影视（后端 API，ISR）
 │   │       ├── game/                 # 游戏（静态数据）
-│   │       └── ranking/              # 硬件排行（静态数据）
 │   ├── api/                          # API 层
 │   │   ├── types.ts                  # 后端 VO / DTO 类型（ApiResult、PageResult 等）
 │   │   ├── post.ts                   # 文章 API
@@ -111,7 +110,6 @@ seiko-blog-ui/
 │   │       └── StarFieldWarp.tsx     # warp 速度线动画
 │   ├── data/                         # 静态数据（无需后端 API）
 │   │   ├── games.ts                  # 游戏探索页数据
-│   │   ├── hardware.ts               # 硬件排行数据
 │   │   ├── techs.ts                  # 3D 技术球数据
 │   │   └── experiences.ts            # 关于页个人经历数据
 │   ├── styles/
@@ -181,7 +179,6 @@ npm run lint
 | 文件 | 用途 |
 |------|------|
 | `games.ts` | `/explore/game` 页面数据 |
-| `hardware.ts` | `/explore/ranking` 排行页数据 |
 | `techs.ts` | 首页 3D 技术球数据 |
 | `experiences.ts` | 关于页个人经历数据 |
 
