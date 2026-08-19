@@ -14,11 +14,20 @@ const SEGMENT_LABELS: Record<string, string> = {
   notices: "公告管理",
   books: "书籍管理",
   movies: "电影管理",
+  resources: "资源管理",
   users: "用户管理",
+  logs: "日志管理",
+  dicts: "字典管理",
   album: "相册",
   photo: "照片",
   new: "新建",
   edit: "编辑",
+};
+
+/** 二级菜单页面的上级分组（无真实路由，仅作为面包屑层级展示） */
+const GROUP_PARENTS: Record<string, string> = {
+  logs: "系统管理",
+  dicts: "系统管理",
 };
 
 /** 可点击跳转的列表页路径（其余段仅作展示） */
@@ -34,6 +43,7 @@ const NAVIGABLE = new Set([
 ]);
 
 interface Crumb {
+  id: string;
   label: string;
   href: string;
   isLink: boolean;
@@ -48,7 +58,16 @@ export default function Breadcrumb() {
   segments.forEach((seg, index) => {
     acc += `/${seg}`;
     const isLast = index === segments.length - 1;
+    if (isLast && GROUP_PARENTS[seg]) {
+      crumbs.push({
+        id: `group-${acc}`,
+        label: GROUP_PARENTS[seg],
+        href: "",
+        isLink: false,
+      });
+    }
     crumbs.push({
+      id: acc,
       label: SEGMENT_LABELS[seg] ?? seg,
       href: acc,
       isLink: !isLast && NAVIGABLE.has(acc),
@@ -64,8 +83,8 @@ export default function Breadcrumb() {
         <Home size={15} />
         <span>首页</span>
       </Link>
-      {crumbs.map((crumb) => (
-        <span key={crumb.href} className="flex items-center gap-1.5">
+      {crumbs.map((crumb, index) => (
+        <span key={crumb.id} className="flex items-center gap-1.5">
           <ChevronRight size={14} className="text-gray-300" />
           {crumb.isLink ? (
             <Link
@@ -75,7 +94,15 @@ export default function Breadcrumb() {
               {crumb.label}
             </Link>
           ) : (
-            <span className="font-medium text-foreground">{crumb.label}</span>
+            <span
+              className={
+                index === crumbs.length - 1
+                  ? "font-medium text-foreground"
+                  : "text-gray-500"
+              }
+            >
+              {crumb.label}
+            </span>
           )}
         </span>
       ))}
