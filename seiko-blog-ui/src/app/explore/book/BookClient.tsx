@@ -43,7 +43,7 @@ export default function BookClient({ initialBooks }: BookClientProps) {
     const diff = index - activeIndex;
     const absOffset = Math.abs(diff);
 
-    const translateX = diff * 400;
+    const translateX = diff * 320;
     const rotateY = diff * -20;
     const translateZ = diff === 0 ? 50 : -absOffset * 80;
     const scale = diff === 0 ? 1.05 : 1 - absOffset * 0.1;
@@ -102,7 +102,7 @@ export default function BookClient({ initialBooks }: BookClientProps) {
                 }}
               >
                 {/* 书籍卡片 */}
-                <div className="relative w-52 h-72 md:w-72 md:h-96 lg:w-80 lg:h-112 group">
+                <div className="relative w-44 h-64 md:w-60 md:h-84 lg:w-68 lg:h-96 group">
                   {/* 书籍封面 */}
                   <div
                     className="relative w-full h-full overflow-hidden rounded-sm"
@@ -126,27 +126,28 @@ export default function BookClient({ initialBooks }: BookClientProps) {
             );
           })}
 
-          {/* 左右切换按钮 */}
-          {books.length > 0 && (
-            <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-25 z-20">
-              <button
-                onClick={prevSlide}
-                className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/60 text-white hover:bg-zinc-700/80 transition-all hover:scale-110 backdrop-blur-sm"
-                aria-label="上一本"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/60 text-white hover:bg-zinc-700/80 transition-all hover:scale-110 backdrop-blur-sm"
-                aria-label="下一本"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* 左右切换按钮（独立于 3D 舞台，避免被卡片遮挡） */}
+      {books.length > 0 && (
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-8 z-50">
+          <button
+            onClick={prevSlide}
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/60 text-white hover:bg-zinc-700/80 transition-all hover:scale-110 backdrop-blur-sm"
+            aria-label="上一本"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800/60 text-white hover:bg-zinc-700/80 transition-all hover:scale-110 backdrop-blur-sm"
+            aria-label="下一本"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       {/* 环境深度元素 */}
       <div className="fixed inset-0 pointer-events-none z-0">

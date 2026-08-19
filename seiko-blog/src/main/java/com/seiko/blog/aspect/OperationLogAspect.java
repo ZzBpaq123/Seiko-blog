@@ -61,7 +61,7 @@ public class OperationLogAspect {
     };
 
     /**
-     * 日志字段最大保存长度（参考若依截断为 2000）
+     * 日志字段最大保存长度
      */
     private static final int MAX_LOG_LENGTH = 2000;
 
