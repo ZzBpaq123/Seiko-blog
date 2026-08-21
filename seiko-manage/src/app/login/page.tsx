@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Sparkles, User, Lock } from "lucide-react";
-import { login } from "@/api/user";
+import { Eye, EyeOff, Sparkles, User, Lock, Mail, KeyRound, ArrowLeft, X } from "lucide-react";
+import { login, getMaskedEmail, sendForgotPasswordCode, resetPasswordByEmail } from "@/api/user";
 import { ApiBusinessError } from "@/utils/request";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
@@ -145,6 +145,23 @@ export default function LoginPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [isLookingAtEachOther, setIsLookingAtEachOther] = useState(false);
   const [isPurplePeeking, setIsPurplePeeking] = useState(false);
+
+  // 忘记密码弹窗状态
+  const [isForgotOpen, setIsForgotOpen] = useState(false);
+  const [forgotStep, setForgotStep] = useState<1 | 2 | 3>(1);
+  const [forgotUsername, setForgotUsername] = useState("");
+  const [maskedEmail, setMaskedEmail] = useState("");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotCode, setForgotCode] = useState("");
+  const [forgotPassword, setForgotPassword] = useState("");
+  const [forgotConfirmPassword, setForgotConfirmPassword] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showForgotConfirmPassword, setShowForgotConfirmPassword] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isForgotSubmitting, setIsForgotSubmitting] = useState(false);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   const purpleRef = useRef<HTMLDivElement>(null);
   const blackRef = useRef<HTMLDivElement>(null);
   const yellowRef = useRef<HTMLDivElement>(null);
@@ -299,6 +316,283 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  const openForgot = () => {
+    setIsForgotOpen(true);
+    setForgotStep(1);
+    setForgotUsername("");
+    setMaskedEmail("");
+    setForgotEmail("");
+    setForgotCode("");
+    setForgotPassword("");
+    setForgotConfirmPassword("");
+    setShowForgotPassword(false);
+    setShowForgotConfirmPassword(false);
+    setCountdown(0);
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = null;
+    }
+  };
+
+  const closeForgot = () => {
+    setIsForgotOpen(false);
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = null;
+    }
+  };
+
+  const startCountdown = () => {
+    setCountdown(60);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    countdownRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) {
+            clearInterval(countdownRef.current);
+            countdownRef.current = null;
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleForgotStep1 = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = forgotUsername.trim();
+    if (!trimmed) {
+      notifyError("请输入用户名");
+      return;
+    }
+    setIsForgotSubmitting(true);
+    try {
+      const masked = await getMaskedEmail({ username: trimmed });
+      setMaskedEmail(masked);
+      setForgotStep(2);
+    } catch (err) {
+      const message = err instanceof ApiBusinessError ? err.message : "查询失败，请稍后重试";
+      notifyError(message);
+    } finally {
+      setIsForgotSubmitting(false);
+    }
+  };
+
+  const handleForgotSendCode = async () => {
+    const trimmedEmail = forgotEmail.trim();
+    if (!trimmedEmail) {
+      notifyError("请输入完整邮箱");
+      return;
+    }
+    setIsSendingCode(true);
+    try {
+      await sendForgotPasswordCode({ username: forgotUsername.trim(), email: trimmedEmail });
+      notifySuccess("验证码已发送");
+      startCountdown();
+      setForgotStep(3);
+    } catch (err) {
+      const message = err instanceof ApiBusinessError ? err.message : "发送失败，请稍后重试";
+      notifyError(message);
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
+
+  const handleForgotReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotCode.trim()) {
+      notifyError("请输入验证码");
+      return;
+    }
+    if (forgotPassword.length < 6 || forgotPassword.length > 20) {
+      notifyError("密码长度需在 6-20 位之间");
+      return;
+    }
+    if (forgotPassword !== forgotConfirmPassword) {
+      notifyError("两次输入的密码不一致");
+      return;
+    }
+    setIsForgotSubmitting(true);
+    try {
+      await resetPasswordByEmail({
+        email: forgotEmail.trim(),
+        code: forgotCode.trim(),
+        newPassword: forgotPassword,
+      });
+      notifySuccess("密码重置成功，请使用新密码登录");
+      closeForgot();
+    } catch (err) {
+      const message = err instanceof ApiBusinessError ? err.message : "重置失败，请稍后重试";
+      notifyError(message);
+    } finally {
+      setIsForgotSubmitting(false);
+    }
+  };
+
+  const renderForgotStep1 = () => (
+    <form onSubmit={handleForgotStep1} className="space-y-5">
+      <div className="space-y-2">
+        <label htmlFor="forgot-username" className="block text-sm font-medium text-foreground">
+          用户名
+        </label>
+        <div className="relative">
+          <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            id="forgot-username"
+            type="text"
+            placeholder="请输入用户名"
+            value={forgotUsername}
+            onChange={(e) => setForgotUsername(e.target.value)}
+            required
+            className="input h-12 w-full"
+            style={{ paddingLeft: "2.5rem" }}
+          />
+        </div>
+      </div>
+      <button
+        type="submit"
+        className="btn btn-primary w-full h-12 text-base justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+        disabled={isForgotSubmitting}
+      >
+        {isForgotSubmitting ? "查询中..." : "下一步"}
+      </button>
+    </form>
+  );
+
+  const renderForgotStep2 = () => (
+    <div className="space-y-5">
+      <div className="rounded-lg bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-600 dark:text-gray-300">
+        该账号绑定的邮箱为：<span className="font-medium text-foreground">{maskedEmail}</span>
+        <br />
+        请输入完整邮箱以接收验证码。
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="forgot-email" className="block text-sm font-medium text-foreground">
+          完整邮箱
+        </label>
+        <div className="relative">
+          <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            id="forgot-email"
+            type="email"
+            placeholder="请输入完整邮箱"
+            value={forgotEmail}
+            onChange={(e) => setForgotEmail(e.target.value)}
+            required
+            className="input h-12 w-full"
+            style={{ paddingLeft: "2.5rem" }}
+          />
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={handleForgotSendCode}
+        className="btn btn-primary w-full h-12 text-base justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+        disabled={isSendingCode}
+      >
+        {isSendingCode ? "发送中..." : "发送验证码"}
+      </button>
+    </div>
+  );
+
+  const renderForgotStep3 = () => (
+    <form onSubmit={handleForgotReset} className="space-y-5">
+      <div className="space-y-2">
+        <label htmlFor="forgot-code" className="block text-sm font-medium text-foreground">
+          验证码
+        </label>
+        <div className="relative">
+          <KeyRound size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            id="forgot-code"
+            type="text"
+            inputMode="numeric"
+            maxLength={6}
+            placeholder="请输入 6 位验证码"
+            value={forgotCode}
+            onChange={(e) => setForgotCode(e.target.value)}
+            required
+            className="input h-12 w-full"
+            style={{ paddingLeft: "2.5rem", paddingRight: "8rem" }}
+          />
+          <button
+            type="button"
+            onClick={handleForgotSendCode}
+            disabled={countdown > 0 || isSendingCode}
+            className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-medium rounded-md bg-primary/10 text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/20 transition-colors"
+          >
+            {countdown > 0 ? `${countdown}s 后重发` : isSendingCode ? "发送中" : "重新发送"}
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="forgot-password" className="block text-sm font-medium text-foreground">
+          新密码
+        </label>
+        <div className="relative">
+          <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            id="forgot-password"
+            type={showForgotPassword ? "text" : "password"}
+            placeholder="请输入新密码（6-20 位）"
+            value={forgotPassword}
+            onChange={(e) => setForgotPassword(e.target.value)}
+            required
+            minLength={6}
+            maxLength={20}
+            className="input h-12 w-full"
+            style={{ paddingLeft: "2.5rem", paddingRight: "2.5rem" }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowForgotPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-foreground transition-colors"
+          >
+            {showForgotPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="forgot-confirm-password" className="block text-sm font-medium text-foreground">
+          确认密码
+        </label>
+        <div className="relative">
+          <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            id="forgot-confirm-password"
+            type={showForgotConfirmPassword ? "text" : "password"}
+            placeholder="请再次输入新密码"
+            value={forgotConfirmPassword}
+            onChange={(e) => setForgotConfirmPassword(e.target.value)}
+            required
+            className="input h-12 w-full"
+            style={{ paddingLeft: "2.5rem", paddingRight: "2.5rem" }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowForgotConfirmPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-foreground transition-colors"
+          >
+            {showForgotConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        className="btn btn-primary w-full h-12 text-base justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+        disabled={isForgotSubmitting}
+      >
+        {isForgotSubmitting ? "重置中..." : "重置密码"}
+      </button>
+    </form>
+  );
+
+  const forgotTitle = forgotStep === 1 ? "忘记密码" : forgotStep === 2 ? "验证邮箱" : "重置密码";
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
@@ -702,9 +996,13 @@ export default function LoginPage() {
                 />
                 记住我 30 天
               </label>
-              <a href="#" className="text-sm text-primary hover:underline font-medium">
+              <button
+                type="button"
+                onClick={openForgot}
+                className="text-sm text-primary hover:underline font-medium"
+              >
                 忘记密码？
-              </a>
+              </button>
             </div>
 
             <button
@@ -717,6 +1015,45 @@ export default function LoginPage() {
           </form>
         </div>
       </div>
+
+      {isForgotOpen && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="absolute inset-0 bg-black/40 animate-fade-in" onClick={closeForgot} />
+          <div className="relative w-full max-w-sm rounded-xl bg-card-bg p-6 shadow-xl animate-dialog-in">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                {forgotStep > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setForgotStep((prev) => (prev === 3 ? 2 : 1) as 1 | 2 | 3)}
+                    className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 transition-colors"
+                    aria-label="返回上一步"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                )}
+                <h3 className="text-base font-semibold text-foreground">{forgotTitle}</h3>
+              </div>
+              <button
+                type="button"
+                onClick={closeForgot}
+                className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 transition-colors"
+                aria-label="关闭"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {forgotStep === 1 && renderForgotStep1()}
+            {forgotStep === 2 && renderForgotStep2()}
+            {forgotStep === 3 && renderForgotStep3()}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

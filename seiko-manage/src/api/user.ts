@@ -1,5 +1,5 @@
 import { del, get, getPage, patch, post, put } from "@/utils/request";
-import type { LoginDTO, LoginVO, PageParams, PageResult, UserDTO, UserVO } from "@/types";
+import type { LoginDTO, LoginVO, PageParams, PageResult, UserDTO, UserVO, ForgotPasswordEmailDTO, ForgotPasswordSendCodeDTO, ForgotPasswordResetDTO } from "@/types";
 
 const TOKEN_KEY = "token";
 const USER_KEY = "user";
@@ -78,6 +78,23 @@ export async function updateUserStatus(id: number, userStatus: string): Promise<
 /** 重置用户密码（管理端） */
 export async function resetUserPassword(id: number, newPassword: string): Promise<boolean> {
   return patch<boolean>(`/manage/user/${id}/password`, undefined, { params: { newPassword } });
+}
+
+// ─── 忘记密码 ───
+
+/** 根据用户名获取掩码后的邮箱 */
+export async function getMaskedEmail(data: ForgotPasswordEmailDTO): Promise<string> {
+  return post<string>("/manage/user/forgot-password/masked-email", data);
+}
+
+/** 校验邮箱与用户名匹配后发送验证码 */
+export async function sendForgotPasswordCode(data: ForgotPasswordSendCodeDTO): Promise<void> {
+  return post<void>("/manage/user/forgot-password/send-code", data);
+}
+
+/** 校验验证码后重置密码 */
+export async function resetPasswordByEmail(data: ForgotPasswordResetDTO): Promise<void> {
+  return post<void>("/manage/user/forgot-password/reset", data);
 }
 
 // ─── 本地 Token / 用户存储 ───

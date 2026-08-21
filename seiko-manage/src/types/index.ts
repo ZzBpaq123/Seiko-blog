@@ -112,6 +112,24 @@ export interface UserDTO {
   userStatus?: string;
 }
 
+/** 忘记密码-查询掩码邮箱请求 */
+export interface ForgotPasswordEmailDTO {
+  username: string;
+}
+
+/** 忘记密码-发送验证码请求 */
+export interface ForgotPasswordSendCodeDTO {
+  username: string;
+  email: string;
+}
+
+/** 忘记密码-重置密码请求 */
+export interface ForgotPasswordResetDTO {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
 // ─── Post ───
 
 export interface PostVO {
