@@ -33,7 +33,7 @@ import java.util.Set;
  * 操作日志切面
  *
  * <p>仅拦截 {@code com.seiko.blog.controller.manage} 包下标注了 {@link OperationLog} 的方法，
- * 参考若依 {@code LogAspect} 收集请求入参、返回参数、错误信息、操作状态与耗时，并异步入库。
+ * 收集请求入参、返回参数、错误信息、操作状态与耗时，并异步入库。
  * 公开接口包 {@code controller.blog} 下的方法不记录日志。</p>
  */
 @Slf4j
@@ -53,7 +53,7 @@ public class OperationLogAspect {
     private static final int STATUS_FAIL = 1;
 
     /**
-     * 默认排除的敏感字段（参考若依 {@code LogAspect.EXCLUDE_PROPERTIES}）
+     * 默认排除的敏感字段
      */
     private static final String[] DEFAULT_EXCLUDE_PARAMS = {
             "password", "oldPassword", "newPassword", "confirmPassword",
@@ -308,7 +308,7 @@ public class OperationLogAspect {
     }
 
     /**
-     * 递归过滤 JSON 树中的敏感字段（参考若依 {@code PropertyPreExcludeFilter}）
+     * 递归过滤 JSON 树中的敏感字段
      */
     private JsonNode filterSensitive(JsonNode node, Set<String> excludes) {
         if (node == null || node.isNull()) {

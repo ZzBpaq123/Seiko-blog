@@ -372,7 +372,7 @@ public Result<Void> delete(@PathVariable Long id) {
 仅 `controller/manage` 后台包下标注了 `@OperationLog` 的接口会记录日志，`controller/blog` 公开接口不记录；
 动作名取自注解的 `action`，未标注的接口不会写入日志表。
 
-日志切面参考若依 `LogAspect` 实现，自动记录请求入参（`request_params`）、返回参数（`json_result`）、错误信息（`error_message`）、
+日志切面自动记录请求入参（`request_params`）、返回参数（`json_result`）、错误信息（`error_message`）、
 操作状态（`status`，0-正常 1-异常）、耗时（`cost_time`）与方法签名（`method`）。密码等敏感字段默认不入库，
 可通过 `excludeParamNames` 追加排除字段，`isSaveRequestData` / `isSaveResponseData` 可整体关闭入参/返参记录。
 
