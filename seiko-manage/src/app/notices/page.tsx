@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Search, Pencil, Trash2, Eye, EyeOff, RotateCcw, Loader2, Bell } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, RotateCcw, Loader2, Bell } from "lucide-react";
 import {
   getNoticeList,
   deleteNotice,
@@ -12,12 +12,13 @@ import {
 import type { NoticeVO } from "@/types";
 import { useConfirm } from "@/components/ConfirmDialog";
 import Select from "@/components/Select";
+import CapsuleToggle from "@/components/CapsuleToggle";
 import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
 import { useDictOptions } from "@/hooks/useDict";
-import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
+import { dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { toDateOnly } from "@/utils/date";
 
@@ -158,27 +159,15 @@ export default function NoticesPage() {
                   <td className="font-medium text-foreground">{notice.noticeTitle}</td>
                   <td className="max-w-xs truncate">{notice.noticeContent || "—"}</td>
                   <td>
-                    <span className={dictBadgeClass(commonBooleanOptions, notice.enabled)}>
-                      {dictLabel(commonBooleanOptions, notice.enabled)}
-                    </span>
+                    <CapsuleToggle
+                      checked={notice.enabled}
+                      onChange={() => handleToggle(notice)}
+                      disabled={togglingId === notice.id}
+                    />
                   </td>
                   <td>{toDateOnly(notice.createTime) || "—"}</td>
                   <td className="text-right">
                     <div className="flex items-center justify-center gap-2">
-                      <button
-                        className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed"
-                        title={notice.enabled ? "停用" : "启用"}
-                        onClick={() => handleToggle(notice)}
-                        disabled={togglingId === notice.id}
-                      >
-                        {togglingId === notice.id ? (
-                          <Loader2 size={14} className="animate-spin" />
-                        ) : notice.enabled ? (
-                          <EyeOff size={14} />
-                        ) : (
-                          <Eye size={14} />
-                        )}
-                      </button>
                       <button
                         className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600"
                         title="编辑"

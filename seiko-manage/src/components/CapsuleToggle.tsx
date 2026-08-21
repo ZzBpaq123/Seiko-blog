@@ -16,7 +16,7 @@ interface CapsuleToggleProps {
 /**
  * 胶囊切换开关（启用 / 禁用）
  * - 圆角药丸外形
- * - 底部滑块指示器随状态滑动
+ * - 滑动背景色块标识当前选中状态
  * - 仅小尺寸，受控组件
  */
 export default function CapsuleToggle({
@@ -39,29 +39,30 @@ export default function CapsuleToggle({
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
       ].join(" ")}
     >
+      {/* 滑动背景色块 */}
       <span
         className={[
-          "w-1/2 text-center text-xs font-medium transition-colors duration-200 select-none",
-          checked ? "text-muted" : "text-primary",
+          "absolute top-0.5 left-0.5 h-[calc(100%-4px)] w-[calc(50%-2px)] rounded-full bg-primary",
+          "transition-transform duration-200 ease-out",
+          checked ? "translate-x-full" : "translate-x-0",
+        ].join(" ")}
+      />
+      <span
+        className={[
+          "relative z-10 w-1/2 text-center text-xs font-medium transition-colors duration-200 select-none",
+          checked ? "text-muted" : "text-primary-foreground",
         ].join(" ")}
       >
         {inactiveText}
       </span>
       <span
         className={[
-          "w-1/2 text-center text-xs font-medium transition-colors duration-200 select-none",
-          checked ? "text-primary" : "text-muted",
+          "relative z-10 w-1/2 text-center text-xs font-medium transition-colors duration-200 select-none",
+          checked ? "text-primary-foreground" : "text-muted",
         ].join(" ")}
       >
         {activeText}
       </span>
-      <span
-        className={[
-          "absolute bottom-0.5 left-0.5 h-0.5 w-[calc(50%-2px)] rounded-full bg-primary",
-          "transition-transform duration-200 ease-out",
-          checked ? "translate-x-full" : "translate-x-0",
-        ].join(" ")}
-      />
     </button>
   );
 }
