@@ -41,7 +41,8 @@ public class SaTokenConfig {
 
                     // 1. 放行公开的用户接口
                     if (path.equals("/api/manage/user/login") || path.equals("/api/manage/user/register")
-                            || path.equals("/api/manage/user/check")) {
+                            || path.equals("/api/manage/user/check")
+                            || path.startsWith("/api/manage/user/forgot-password")) {
                         return;
                     }
 

@@ -9,6 +9,7 @@ import com.seiko.common.result.ResultCode;
 import com.seiko.blog.dto.LoginDTO;
 import com.seiko.blog.dto.RegisterDTO;
 import com.seiko.blog.dto.UserDTO;
+import com.seiko.blog.service.VerificationCodeService;
 import com.seiko.blog.entity.User;
 import com.seiko.blog.enums.AvatarColor;
 import com.seiko.blog.enums.UserRole;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+    private final VerificationCodeService verificationCodeService;
 
     @Override
     public LoginVO login(LoginDTO loginDTO) {
@@ -283,6 +285,86 @@ public class UserServiceImpl implements UserService {
         update.setId(id);
         update.setPasswordHash(SecureUtil.md5(newPassword));
         return userMapper.updateById(update) > 0;
+    }
+
+    @Override
+    public String getMaskedEmailByUsername(String username) {
+        User user = getUserByUsername(username);
+        if (user == null || user.getIsDeleted() == 1) {
+            throw new BusinessException(ResultCode.NOT_FOUND);
+        }
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "该用户未绑定邮箱");
+        }
+        return maskEmail(user.getEmail());
+    }
+
+    @Override
+    public void sendForgotPasswordCode(String username, String email) {
+        User user = getUserByUsername(username);
+        if (user == null || user.getIsDeleted() == 1) {
+            throw new BusinessException(ResultCode.NOT_FOUND);
+        }
+        if (!UserStatus.ACTIVE.getValue().equals(user.getUserStatus())) {
+            throw new BusinessException(ResultCode.USER_DISABLED);
+        }
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "该用户未绑定邮箱");
+        }
+        if (!normalizeEmail(email).equals(normalizeEmail(user.getEmail()))) {
+            throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "邮箱与用户名不匹配");
+        }
+        verificationCodeService.generateAndSend(user.getEmail());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resetPasswordByEmail(String email, String code, String newPassword) {
+        if (newPassword == null || newPassword.isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "新密码不能为空");
+        }
+        if (newPassword.length() < 6 || newPassword.length() > 20) {
+            throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "密码长度在6-20之间");
+        }
+        if (!verificationCodeService.verify(email, code)) {
+            throw new BusinessException(ResultCode.VERIFICATION_CODE_ERROR);
+        }
+        User user = getUserByEmail(email);
+        if (user == null || user.getIsDeleted() == 1) {
+            throw new BusinessException(ResultCode.NOT_FOUND);
+        }
+        User update = new User();
+        update.setId(user.getId());
+        update.setPasswordHash(SecureUtil.md5(newPassword));
+        userMapper.updateById(update);
+    }
+
+    private User getUserByEmail(String email) {
+        return userMapper.selectOne(
+                new LambdaQueryWrapper<User>()
+                        .eq(User::getEmail, email)
+                        .eq(User::getIsDeleted, 0)
+        );
+    }
+
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return email;
+        }
+        int atIndex = email.indexOf('@');
+        String local = email.substring(0, atIndex);
+        String domain = email.substring(atIndex);
+        if (local.length() <= 1) {
+            return "*" + domain;
+        }
+        if (local.length() == 2) {
+            return local.charAt(0) + "*" + domain;
+        }
+        return local.charAt(0) + "***" + local.charAt(local.length() - 1) + domain;
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase();
     }
 
     private LoginVO buildLoginVO(User user, String token) {

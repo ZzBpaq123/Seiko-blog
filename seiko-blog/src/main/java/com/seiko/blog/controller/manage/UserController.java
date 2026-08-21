@@ -5,7 +5,12 @@ import com.seiko.common.annotation.OperationLog;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.Result;
 import com.seiko.common.result.ResultCode;
+import com.seiko.blog.component.EmailRateLimiter;
 import com.seiko.blog.component.LoginRateLimiter;
+import com.seiko.blog.config.VerificationCodeProperties;
+import com.seiko.blog.dto.ForgotPasswordEmailDTO;
+import com.seiko.blog.dto.ForgotPasswordResetDTO;
+import com.seiko.blog.dto.ForgotPasswordSendCodeDTO;
 import com.seiko.blog.dto.LoginDTO;
 import com.seiko.blog.dto.RegisterDTO;
 import com.seiko.blog.service.UserService;
@@ -31,6 +36,8 @@ public class UserController {
 
     private final UserService userService;
     private final LoginRateLimiter loginRateLimiter;
+    private final EmailRateLimiter emailRateLimiter;
+    private final VerificationCodeProperties verificationCodeProperties;
     private final HttpServletRequest request;
 
     /**
@@ -111,5 +118,45 @@ public class UserController {
     public Result<Boolean> isLogin() {
         boolean isLogin = StpUtil.isLogin();
         return Result.success(isLogin);
+    }
+
+    /**
+     * 忘记密码-查询掩码邮箱
+     */
+    @OperationLog(action = "忘记密码-查询掩码邮箱")
+    @Operation(summary = "忘记密码-查询掩码邮箱", description = "根据用户名返回掩码后的邮箱")
+    @PostMapping("/forgot-password/masked-email")
+    public Result<String> getMaskedEmail(@Valid @RequestBody ForgotPasswordEmailDTO dto) {
+        String maskedEmail = userService.getMaskedEmailByUsername(dto.getUsername());
+        return Result.success(maskedEmail);
+    }
+
+    /**
+     * 忘记密码-发送验证码
+     */
+    @OperationLog(action = "忘记密码-发送验证码")
+    @Operation(summary = "忘记密码-发送验证码", description = "校验邮箱与用户名匹配后发送验证码")
+    @PostMapping("/forgot-password/send-code")
+    public Result<Void> sendForgotPasswordCode(@Valid @RequestBody ForgotPasswordSendCodeDTO dto) {
+        if (!verificationCodeProperties.isEnabled()) {
+            return Result.success("验证码已发送", null);
+        }
+
+        emailRateLimiter.check(request, dto.getEmail());
+        userService.sendForgotPasswordCode(dto.getUsername(), dto.getEmail());
+        emailRateLimiter.recordSend(request, dto.getEmail());
+
+        return Result.success("验证码已发送", null);
+    }
+
+    /**
+     * 忘记密码-重置密码
+     */
+    @OperationLog(action = "忘记密码-重置密码")
+    @Operation(summary = "忘记密码-重置密码", description = "校验验证码后重置密码")
+    @PostMapping("/forgot-password/reset")
+    public Result<Void> resetPasswordByEmail(@Valid @RequestBody ForgotPasswordResetDTO dto) {
+        userService.resetPasswordByEmail(dto.getEmail(), dto.getCode(), dto.getNewPassword());
+        return Result.success("密码重置成功", null);
     }
 }

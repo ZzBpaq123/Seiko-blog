@@ -120,4 +120,29 @@ public interface UserService {
      * @return 是否重置成功
      */
     Boolean resetUserPassword(Long id, String newPassword);
+
+    /**
+     * 根据用户名获取掩码后的邮箱
+     *
+     * @param username 用户名
+     * @return 掩码邮箱，如 a***c@example.com
+     */
+    String getMaskedEmailByUsername(String username);
+
+    /**
+     * 校验用户名与邮箱匹配后发送忘记密码验证码
+     *
+     * @param username 用户名
+     * @param email    完整邮箱
+     */
+    void sendForgotPasswordCode(String username, String email);
+
+    /**
+     * 校验验证码后根据邮箱重置密码
+     *
+     * @param email       邮箱
+     * @param code        验证码
+     * @param newPassword 新密码
+     */
+    void resetPasswordByEmail(String email, String code, String newPassword);
 }
