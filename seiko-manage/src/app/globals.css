@@ -42,6 +42,7 @@
   --color-sidebar-bg: var(--sidebar-bg);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
   --color-border: var(--border);
   --color-card-bg: var(--card-bg);
 }

@@ -8,8 +8,6 @@ import {
   Search,
   Pencil,
   Trash2,
-  Eye,
-  EyeOff,
   RotateCcw,
   Loader2,
   Link as LinkIcon,
@@ -23,12 +21,13 @@ import {
 import type { ResourceVO } from "@/types";
 import { useConfirm } from "@/components/ConfirmDialog";
 import Select from "@/components/Select";
+import CapsuleToggle from "@/components/CapsuleToggle";
 import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagedList } from "@/hooks/usePagedList";
 import { useDictOptions } from "@/hooks/useDict";
-import { dictBadgeClass, dictLabel, dictSelectOptions } from "@/utils/dict";
+import { dictSelectOptions } from "@/utils/dict";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { toDateOnly } from "@/utils/date";
 
@@ -204,27 +203,15 @@ export default function ResourcesPage() {
                   </td>
                   <td className="max-w-xs truncate">{resource.description || "—"}</td>
                   <td>
-                    <span className={dictBadgeClass(commonBooleanOptions, resource.enabled)}>
-                      {dictLabel(commonBooleanOptions, resource.enabled)}
-                    </span>
+                    <CapsuleToggle
+                      checked={resource.enabled}
+                      onChange={() => handleToggle(resource)}
+                      disabled={togglingId === resource.id}
+                    />
                   </td>
                   <td>{toDateOnly(resource.createTime) || "—"}</td>
                   <td className="text-right">
                     <div className="flex items-center justify-center gap-2">
-                      <button
-                        className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed"
-                        title={resource.enabled ? "停用" : "启用"}
-                        onClick={() => handleToggle(resource)}
-                        disabled={togglingId === resource.id}
-                      >
-                        {togglingId === resource.id ? (
-                          <Loader2 size={14} className="animate-spin" />
-                        ) : resource.enabled ? (
-                          <EyeOff size={14} />
-                        ) : (
-                          <Eye size={14} />
-                        )}
-                      </button>
                       <button
                         className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600"
                         title="编辑"

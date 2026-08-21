@@ -3,8 +3,6 @@
 import { useState } from "react";
 import {
   BookMarked,
-  Eye,
-  EyeOff,
   Loader2,
   Pencil,
   Plus,
@@ -24,6 +22,7 @@ import {
 import type { DictItemVO, DictTypeVO, PageResult } from "@/types";
 import { useConfirm } from "@/components/ConfirmDialog";
 import PageHeader from "@/components/PageHeader";
+import CapsuleToggle from "@/components/CapsuleToggle";
 import Pagination from "@/components/Pagination";
 import DictTypeFormDialog from "@/components/forms/DictTypeFormDialog";
 import DictItemFormDialog from "@/components/forms/DictItemFormDialog";
@@ -353,24 +352,6 @@ export default function DictsPage() {
                       </button>
                       <button
                         type="button"
-                        className="p-1 rounded-lg hover:bg-gray-100 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed"
-                        title={type.enabled ? "停用" : "启用"}
-                        disabled={typeTogglingId === type.id}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleType(type);
-                        }}
-                      >
-                        {typeTogglingId === type.id ? (
-                          <Loader2 size={13} className="animate-spin" />
-                        ) : type.enabled ? (
-                          <EyeOff size={13} />
-                        ) : (
-                          <Eye size={13} />
-                        )}
-                      </button>
-                      <button
-                        type="button"
                         className="p-1 rounded-lg hover:bg-red-50 text-red-600 disabled:opacity-40 disabled:cursor-not-allowed"
                         title="删除"
                         disabled={typeDeletingId === type.id}
@@ -385,13 +366,13 @@ export default function DictsPage() {
                           <Trash2 size={13} />
                         )}
                       </button>
-                      <span
-                        className={`ml-auto text-xs ${
-                          type.enabled ? "text-green-600" : "text-gray-400"
-                        }`}
-                      >
-                        {type.enabled ? "启用" : "停用"}
-                      </span>
+                      <div className="ml-auto">
+                        <CapsuleToggle
+                          checked={type.enabled}
+                          onChange={() => handleToggleType(type)}
+                          disabled={typeTogglingId === type.id}
+                        />
+                      </div>
                     </div>
                   </div>
                 );
@@ -495,27 +476,15 @@ export default function DictsPage() {
                         </td>
                         <td>{item.sortOrder}</td>
                         <td>
-                          <span className={`badge ${item.enabled ? "badge-green" : "badge-gray"}`}>
-                            {item.enabled ? "启用" : "停用"}
-                          </span>
+                          <CapsuleToggle
+                            checked={item.enabled}
+                            onChange={() => handleToggleItem(item)}
+                            disabled={itemTogglingId === item.id}
+                          />
                         </td>
                         <td>{toDateOnly(item.createTime) || "—"}</td>
                         <td className="text-right">
                           <div className="flex items-center justify-center gap-2">
-                            <button
-                              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 disabled:opacity-40 disabled:cursor-not-allowed"
-                              title={item.enabled ? "停用" : "启用"}
-                              onClick={() => handleToggleItem(item)}
-                              disabled={itemTogglingId === item.id}
-                            >
-                              {itemTogglingId === item.id ? (
-                                <Loader2 size={14} className="animate-spin" />
-                              ) : item.enabled ? (
-                                <EyeOff size={14} />
-                              ) : (
-                                <Eye size={14} />
-                              )}
-                            </button>
                             <button
                               className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600"
                               title="编辑"
