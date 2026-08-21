@@ -90,16 +90,12 @@ export default function DashboardPage() {
   const cards = stats ? buildStatCards(stats) : [];
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">仪表盘</h1>
-      </div>
-
+    <div className="space-y-3">
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
         {loading
           ? Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="card p-4">
+              <div key={index} className="card p-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-gray-100 animate-pulse" />
                   <div className="flex-1 space-y-2">
@@ -110,7 +106,7 @@ export default function DashboardPage() {
               </div>
             ))
           : cards.map((stat) => (
-              <div key={stat.label} className="card p-4">
+              <div key={stat.label} className="card p-3">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.color}`}>
                     {stat.icon}
@@ -124,13 +120,13 @@ export default function DashboardPage() {
             ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         {/* Left column: Recent Activity + Creation Trend */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Recent Activity */}
-          <div className="card">
-            <h2 className="text-lg font-semibold text-foreground mb-4">最近动态</h2>
-            <div className="space-y-4">
+          <div className="card p-3">
+            <h2 className="text-base font-semibold text-foreground mb-3">最近动态</h2>
+            <div className="space-y-3">
               {recentActivities.map((activity, index) => (
                 <div key={index} className="flex items-start gap-3 pb-3 border-b border-border last:border-0 last:pb-0">
                   <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
@@ -145,11 +141,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Creation Trend */}
-          <div className="card">
+          <div className="card p-3">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">内容新建趋势</h2>
+              <h2 className="text-base font-semibold text-foreground">内容新建趋势</h2>
               <select
-                className="input py-1.5 px-2 text-sm w-24! mr-[5px]!"
+                className="input py-1.5 px-2 text-sm w-24! mr-1.25!"
                 value={trendDays}
                 onChange={(e) => {
                   const days = Number(e.target.value);
@@ -167,11 +163,11 @@ export default function DashboardPage() {
         </div>
 
         {/* Right column: System Info + Read Dot Matrix */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* System Info */}
-          <div className="card">
-            <h2 className="text-lg font-semibold text-foreground mb-4">系统信息</h2>
-            <div className="space-y-3">
+          <div className="card p-3">
+            <h2 className="text-base font-semibold text-foreground mb-3">系统信息</h2>
+            <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">系统版本</span>
                 <span className="font-medium text-foreground">v1.0.0</span>
@@ -196,9 +192,9 @@ export default function DashboardPage() {
           </div>
 
           {/* Read Count Dot Matrix */}
-          <div className="card">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">文章阅读量分布</h2>
+          <div className="card p-3">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base font-semibold text-foreground">文章阅读量分布</h2>
               <span className="text-xs text-gray-400">点越大阅读量越高</span>
             </div>
             <ReadDotMatrixChart data={readDots} loading={readDotsLoading} />
