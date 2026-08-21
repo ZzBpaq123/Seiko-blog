@@ -33,7 +33,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
         redisTemplate.opsForValue().set(key, code, properties.getCodeTtlSeconds(), TimeUnit.SECONDS);
         emailService.sendVerificationCode(email, code);
 
-        log.info("已生成评论验证码，发送至 [{}]，TTL {} 秒", email, properties.getCodeTtlSeconds());
+        log.info("已生成验证码，发送至 [{}]，TTL {} 秒", email, properties.getCodeTtlSeconds());
         return code;
     }
 
