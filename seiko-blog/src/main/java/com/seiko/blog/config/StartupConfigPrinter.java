@@ -28,32 +28,19 @@ public class StartupConfigPrinter implements ApplicationRunner {
         items.add(new ConfigItem("应用名称", "spring.application.name"));
         items.add(new ConfigItem("激活环境", "spring.profiles.active"));
         items.add(new ConfigItem("服务端口", "server.port"));
-
         // 数据源
         items.add(new ConfigItem("MySQL用户名", "spring.datasource.username"));
         items.add(new ConfigItem("MySQL密码", "spring.datasource.password"));
-
         // Redis
         items.add(new ConfigItem("Redis 主机", "spring.data.redis.host"));
         items.add(new ConfigItem("Redis 端口", "spring.data.redis.port"));
         items.add(new ConfigItem("Redis 库", "spring.data.redis.database"));
         items.add(new ConfigItem("Redis 密码", "spring.data.redis.password"));
-
         // 邮件
         items.add(new ConfigItem("邮件服务器", "spring.mail.host"));
         items.add(new ConfigItem("邮件端口", "spring.mail.port"));
         items.add(new ConfigItem("邮件用户名", "spring.mail.username"));
         items.add(new ConfigItem("邮件密码", "spring.mail.password"));
-
-        // 文件上传
-        items.add(new ConfigItem("上传存储路径", "blog.upload.path"));
-        items.add(new ConfigItem("上传访问前缀", "blog.upload.url-prefix"));
-        items.add(new ConfigItem("上传最大限制", "blog.upload.max-size"));
-
-        // 安全配置
-        items.add(new ConfigItem("登录限流", "blog.security.login-rate-limit.enabled"));
-        items.add(new ConfigItem("邮箱验证码", "blog.security.email-code.enabled"));
-
         printBanner(items);
     }
 
