@@ -231,3 +231,22 @@ export interface FootprintDTO {
   lat?: number;
   lng?: number;
 }
+
+// ─── Resource ───
+
+export interface ResourceVO {
+  id: number;
+  resourceIcon: string;
+  resourceName: string;
+  resourceUrl: string;
+  category: string;
+  description: string;
+  sortOrder: number;
+  enabled: boolean;
+  createTime: string;
+}
+
+export interface ResourceGroupVO {
+  category: string;
+  resources: ResourceVO[];
+}

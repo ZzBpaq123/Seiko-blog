@@ -53,6 +53,11 @@ export const pageHeaderStyles: Record<
     scrolledBg: "bg-[#0c0e17]/95 backdrop-blur-md shadow-lg",
     text: "text-[#f0f0fd]",
   },
+  "/explore/resource": {
+    bg: "bg-[#0a1210]/80 backdrop-blur-md",
+    scrolledBg: "bg-[#0a1210]/95 backdrop-blur-md shadow-lg",
+    text: "text-emerald-100",
+  },
   // 关于页
   "/about": {
     bg: "bg-rose-50/80 backdrop-blur-md dark:bg-rose-950/30",
@@ -115,6 +120,11 @@ export const pageFooterStyles: Record<
     bg: "bg-[#0c0e17]",
     border: "border-[#1c1f2b]",
     text: "text-[#aaaab7]",
+  },
+  "/explore/resource": {
+    bg: "bg-[#0a1210]",
+    border: "border-[#14211d]",
+    text: "text-emerald-100/60",
   },
   // 关于我页
   "/about/myself": {
