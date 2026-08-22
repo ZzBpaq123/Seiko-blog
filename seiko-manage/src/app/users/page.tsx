@@ -13,6 +13,7 @@ import {
   RotateCcw,
   Loader2,
   Users,
+  CircleHelp,
 } from "lucide-react";
 import {
   getUserList,
@@ -158,7 +159,14 @@ export default function UsersPage() {
               <th>用户名</th>
               <th>邮箱</th>
               <th>角色</th>
-              <th>状态</th>
+              <th>
+                <span className="inline-flex items-center gap-1">
+                  状态
+                  <span title="点击状态标签可禁用/启用用户">
+                    <CircleHelp size={14} className="text-gray-400 cursor-help" />
+                  </span>
+                </span>
+              </th>
               <th>最后登录</th>
               <th>注册时间</th>
               <th className="text-right">操作</th>
