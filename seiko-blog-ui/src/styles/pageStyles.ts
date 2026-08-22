@@ -44,9 +44,9 @@ export const pageHeaderStyles: Record<
     text: "text-amber-900 dark:text-amber-100",
   },
   "/explore/movie": {
-    bg: "bg-[#0d0d19]/80 backdrop-blur-md",
-    scrolledBg: "bg-[#0d0d19]/95 backdrop-blur-md shadow-lg",
-    text: "text-[#e6e3f5]",
+    bg: "bg-[#f5f3ef]/80 backdrop-blur-md",
+    scrolledBg: "bg-[#f5f3ef]/95 backdrop-blur-md shadow-sm",
+    text: "text-stone-800",
   },
   "/explore/game": {
     bg: "bg-[#0c0e17]/80 backdrop-blur-md",
@@ -112,9 +112,9 @@ export const pageFooterStyles: Record<
     text: "text-amber-600 dark:text-amber-400",
   },
   "/explore/movie": {
-    bg: "bg-[#0d0d19]",
-    border: "border-[#1e1e2e]",
-    text: "text-[#aba9ba]",
+    bg: "bg-[#f5f3ef]",
+    border: "border-stone-200",
+    text: "text-stone-500",
   },
   "/explore/game": {
     bg: "bg-[#0c0e17]",

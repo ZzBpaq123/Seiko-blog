@@ -20,14 +20,14 @@
   --color-macaron-coral: #f8b195;
   --color-macaron-rose: #f67280;
 
-  /* 影视页深色主题色 */
-  --color-movie-bg: #0d0d19;
-  --color-movie-surface: #12121f;
-  --color-movie-surface-elevated: #1e1e2e;
-  --color-movie-text: #e6e3f5;
-  --color-movie-muted: #aba9ba;
-  --color-movie-accent: #8ff5ff;
-  --color-movie-rank: #ff4342;
+  /* 影视页浅色主题色 */
+  --color-movie-bg: #f5f3ef;
+  --color-movie-surface: #ffffff;
+  --color-movie-surface-elevated: #ffffff;
+  --color-movie-text: #1f2937;
+  --color-movie-muted: #6b7280;
+  --color-movie-accent: #dc2626;
+  --color-movie-rank: #ef4444;
 }
 
 @media (prefers-color-scheme: dark) {
