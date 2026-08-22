@@ -1048,6 +1048,49 @@ export default function LoginPage() {
               </button>
             </div>
 
+            {/* 步骤进度条 */}
+            <div className="mb-6">
+              <div className="relative flex items-start justify-between">
+                <div className="absolute left-0 right-0 top-3 h-0.5 -translate-y-1/2 bg-gray-200 dark:bg-gray-700" />
+                <div
+                  className="absolute left-0 top-3 h-0.5 -translate-y-1/2 bg-primary transition-all duration-300"
+                  style={{ width: `${((forgotStep - 1) / 2) * 100}%` }}
+                />
+                {[
+                  { step: 1, label: "验证身份" },
+                  { step: 2, label: "验证邮箱" },
+                  { step: 3, label: "重置密码" },
+                ].map(({ step, label }) => {
+                  const isActive = step === forgotStep;
+                  const isCompleted = step < forgotStep;
+                  return (
+                    <div key={step} className="relative z-10 flex flex-col items-center gap-1.5">
+                      <div
+                        className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium transition-colors duration-300 ${
+                          isCompleted
+                            ? "bg-primary text-white"
+                            : isActive
+                              ? "bg-primary text-white ring-2 ring-primary/30"
+                              : "bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+                        }`}
+                      >
+                        {step}
+                      </div>
+                      <span
+                        className={`text-[10px] transition-colors duration-300 ${
+                          isActive || isCompleted
+                            ? "text-primary font-medium"
+                            : "text-gray-400 dark:text-gray-500"
+                        }`}
+                      >
+                        {label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             {forgotStep === 1 && renderForgotStep1()}
             {forgotStep === 2 && renderForgotStep2()}
             {forgotStep === 3 && renderForgotStep3()}
