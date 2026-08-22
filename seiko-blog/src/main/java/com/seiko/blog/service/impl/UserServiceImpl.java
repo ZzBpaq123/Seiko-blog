@@ -220,6 +220,11 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResultCode.NOT_FOUND);
         }
 
+        if (UserStatus.INACTIVE.getValue().equals(dto.getUserStatus())
+                && UserRole.ADMIN.getValue().equals(user.getUserRole())) {
+            throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "管理员用户不能被禁用");
+        }
+
         // 用户名变更时校验唯一性
         if (!user.getUsername().equals(dto.getUsername())
                 && getUserByUsername(dto.getUsername()) != null) {
@@ -258,6 +263,9 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectById(id);
         if (user == null || user.getIsDeleted() == 1) {
             throw new BusinessException(ResultCode.NOT_FOUND);
+        }
+        if (UserRole.ADMIN.getValue().equals(user.getUserRole()) && UserStatus.INACTIVE.getValue().equals(userStatus)) {
+            throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "管理员用户不能被禁用");
         }
 
         User update = new User();

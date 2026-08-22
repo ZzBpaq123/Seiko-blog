@@ -89,6 +89,10 @@ export default function UsersPage() {
   // 切换用户状态
   const handleToggleStatus = async (user: UserVO) => {
     const next = user.userStatus === "active" ? "inactive" : "active";
+    if (user.userRole === "admin" && next === "inactive") {
+      notifyError("管理员用户不能被禁用");
+      return;
+    }
     setTogglingId(user.id);
     try {
       await updateUserStatus(user.id, next);
