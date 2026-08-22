@@ -86,7 +86,7 @@ function ResourceGroup({ group, index }: { group: ResourceGroupVO; index: number
 export default function ResourceClient({ initialGroups }: ResourceClientProps) {
   if (initialGroups.length === 0) {
     return (
-      <main className="-mt-14 -mb-16 flex min-h-screen items-center justify-center bg-[#0a1210] px-4">
+      <main className="-mt-14 -mb-16 flex min-h-screen items-center justify-center bg-[#0a1210] px-4 pb-16">
         <div className="text-center">
           <Globe className="mx-auto mb-4 h-12 w-12 text-emerald-700" />
           <p className="text-lg text-emerald-100/70">暂无资源</p>
@@ -96,7 +96,7 @@ export default function ResourceClient({ initialGroups }: ResourceClientProps) {
   }
 
   return (
-    <main className="-mt-14 -mb-16 min-h-screen bg-[#0a1210]">
+    <main className="-mt-14 -mb-16 min-h-screen bg-[#0a1210] pb-16">
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0a1210] pb-16 pt-32 md:pb-20 md:pt-40">
         <div className="absolute inset-0 opacity-20">
