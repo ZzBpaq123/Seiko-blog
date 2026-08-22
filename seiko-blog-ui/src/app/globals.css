@@ -305,3 +305,57 @@ a {
 .animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out both;
 }
+
+/* Corner float animation for book page corners */
+@keyframes corner-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-corner-float {
+  animation: corner-float 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-corner-float {
+    animation: none;
+  }
+}
+
+@keyframes flip-next {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes flip-prev {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(180deg);
+  }
+}
+
+.animate-flip-next {
+  animation: flip-next 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-flip-prev {
+  animation: flip-prev 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-flip-next,
+  .animate-flip-prev {
+    animation-duration: 0.01ms;
+  }
+}
