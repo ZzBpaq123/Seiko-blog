@@ -92,7 +92,7 @@ export default function MovieClient({ initialMovies }: MovieClientProps) {
                 unoptimized
               />
               {/* 渐变遮罩 */}
-              <div className="absolute inset-0 bg-linear-to-r from-movie-bg via-movie-bg/30 via-50% to-movie-bg" />
+              <div className="absolute inset-0 bg-linear-to-r from-movie-bg/60 via-movie-bg/10 via-50% to-movie-bg/60" />
             </div>
           ))}
 
