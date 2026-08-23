@@ -27,6 +27,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
               className="object-cover"
               unoptimized
             />
+            <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/20 to-transparent" />
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-7xl px-4 sm:px-6 lg:px-12">
               <h1
                 className="font-bold text-5xl md:text-7xl lg:text-8xl tracking-tighter mb-4"

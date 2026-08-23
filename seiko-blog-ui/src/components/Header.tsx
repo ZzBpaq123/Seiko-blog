@@ -49,7 +49,7 @@ export default function Header({ overlayMode = false }: HeaderProps) {
     pageHeaderStyles,
     defaultHeaderStyle,
   );
-  const isDarkHeroPage = ["/", "/blog"].includes(pathname);
+  const isDarkHeroPage = ["/", "/blog", "/explore/movie", "/explore/game"].includes(pathname);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 

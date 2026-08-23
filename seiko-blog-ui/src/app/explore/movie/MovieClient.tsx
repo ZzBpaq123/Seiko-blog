@@ -96,6 +96,9 @@ export default function MovieClient({ initialMovies }: MovieClientProps) {
             </div>
           ))}
 
+          {/* 顶部暗色渐变，保证白色 Header 可读 */}
+          <div className="absolute inset-0 z-10 bg-linear-to-b from-black/70 via-transparent to-transparent" />
+
           {/* 轮播内容 */}
           <div className="absolute inset-0 z-20 flex items-end">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">

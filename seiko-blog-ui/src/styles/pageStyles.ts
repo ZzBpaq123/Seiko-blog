@@ -44,14 +44,16 @@ export const pageHeaderStyles: Record<
     text: "text-amber-900 dark:text-amber-100",
   },
   "/explore/movie": {
-    bg: "bg-[#f5f3ef]/80 backdrop-blur-md",
-    scrolledBg: "bg-[#f5f3ef]/95 backdrop-blur-md shadow-sm",
-    text: "text-stone-800",
+    bg: "bg-white/10 backdrop-blur-sm",
+    scrolledBg:
+      "bg-white/50 backdrop-blur-md shadow-[0_0_30px_rgba(255,255,255,0.4),0_0_60px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]",
+    text: "text-white",
   },
   "/explore/game": {
-    bg: "bg-[#f8f7f5]/80 backdrop-blur-md",
-    scrolledBg: "bg-[#f8f7f5]/95 backdrop-blur-md shadow-sm",
-    text: "text-stone-800",
+    bg: "bg-white/10 backdrop-blur-sm",
+    scrolledBg:
+      "bg-white/50 backdrop-blur-md shadow-[0_0_30px_rgba(255,255,255,0.4),0_0_60px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]",
+    text: "text-white",
   },
   "/explore/resource": {
     bg: "bg-[#f8f7f5]/80 backdrop-blur-md",
