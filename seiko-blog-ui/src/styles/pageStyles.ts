@@ -49,9 +49,9 @@ export const pageHeaderStyles: Record<
     text: "text-stone-800",
   },
   "/explore/game": {
-    bg: "bg-[#0c0e17]/80 backdrop-blur-md",
-    scrolledBg: "bg-[#0c0e17]/95 backdrop-blur-md shadow-lg",
-    text: "text-[#f0f0fd]",
+    bg: "bg-[#f8f7f5]/80 backdrop-blur-md",
+    scrolledBg: "bg-[#f8f7f5]/95 backdrop-blur-md shadow-sm",
+    text: "text-stone-800",
   },
   "/explore/resource": {
     bg: "bg-[#0a1210]/80 backdrop-blur-md",
@@ -117,9 +117,9 @@ export const pageFooterStyles: Record<
     text: "text-stone-500",
   },
   "/explore/game": {
-    bg: "bg-[#0c0e17]",
-    border: "border-[#1c1f2b]",
-    text: "text-[#aaaab7]",
+    bg: "bg-[#f8f7f5]",
+    border: "border-stone-200",
+    text: "text-stone-500",
   },
   "/explore/resource": {
     bg: "bg-[#0a1210]",

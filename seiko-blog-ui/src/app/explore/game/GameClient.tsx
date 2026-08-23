@@ -11,7 +11,7 @@ interface GameClientProps {
 
 export default function GameClient({ initialGames }: GameClientProps) {
   return (
-    <div className="min-h-screen bg-zinc-950 -mt-14 -mb-16 pb-16">
+    <div className="min-h-screen bg-game-bg -mt-14 -mb-16 pb-16">
       {initialGames.map((game, index) => (
         <section
           key={game.id}
@@ -27,7 +27,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
               className="object-cover grayscale contrast-125 opacity-40"
               unoptimized
             />
-            <div className="absolute inset-0 bg-linear-to-t from-zinc-950 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-game-bg via-transparent to-transparent" />
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-7xl px-4 sm:px-6 lg:px-12">
               <h1
                 className="font-bold text-5xl md:text-7xl lg:text-8xl tracking-tighter mb-4"
@@ -42,7 +42,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                 {game.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-zinc-800 px-3 py-1 text-[10px] uppercase tracking-widest font-medium"
+                    className="bg-game-surface px-3 py-1 text-[10px] uppercase tracking-widest font-medium"
                     style={{ color: game.accentColor }}
                   >
                     {tag}
@@ -62,11 +62,11 @@ export default function GameClient({ initialGames }: GameClientProps) {
                   <div
                     className="p-6 md:p-8 rounded-xl border-l-2"
                     style={{
-                      backgroundColor: index % 2 === 0 ? "#0c0e17" : "#11131d",
+                      backgroundColor: index % 2 === 0 ? "#f2f0ec" : "#ffffff",
                       borderColor: game.accentColor,
                     }}
                   >
-                    <p className="text-zinc-100/80 leading-relaxed text-base">
+                    <p className="text-game-text/80 leading-relaxed text-base">
                       {game.description}
                     </p>
                   </div>
@@ -83,7 +83,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                       {game.images.map((img, i) => (
                         <div
                           key={i}
-                          className="aspect-video bg-zinc-900 overflow-hidden rounded-lg border border-white/5"
+                          className="aspect-video bg-game-surface-alt overflow-hidden rounded-lg border border-game-text/5"
                         >
                           <Image
                             src={img}
@@ -103,13 +103,13 @@ export default function GameClient({ initialGames }: GameClientProps) {
               {/* Right Column - Metadata & Actions */}
               <div className="col-span-12 lg:col-span-4 space-y-6">
                 {/* Metadata Card */}
-                <div className="bg-zinc-800 p-6 rounded-xl">
-                  <h4 className="text-[10px] text-slate-500 uppercase tracking-[0.2em] mb-4">
+                <div className="bg-game-surface p-6 rounded-xl">
+                  <h4 className="text-[10px] text-game-muted uppercase tracking-[0.2em] mb-4">
                     元数据
                   </h4>
                   <div className="space-y-4">
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-xs uppercase text-zinc-400">
+                    <div className="flex justify-between border-b border-game-text/10 pb-2">
+                      <span className="text-xs uppercase text-game-muted">
                         中文名
                       </span>
                       <span
@@ -119,8 +119,8 @@ export default function GameClient({ initialGames }: GameClientProps) {
                         {game.chineseName}
                       </span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-xs uppercase text-zinc-400">
+                    <div className="flex justify-between border-b border-game-text/10 pb-2">
+                      <span className="text-xs uppercase text-game-muted">
                         英文名
                       </span>
                       <span
@@ -130,19 +130,19 @@ export default function GameClient({ initialGames }: GameClientProps) {
                         {game.englishName}
                       </span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-xs uppercase text-zinc-400">
+                    <div className="flex justify-between border-b border-game-text/10 pb-2">
+                      <span className="text-xs uppercase text-game-muted">
                         开发商
                       </span>
-                      <span className="text-xs font-bold text-zinc-100">
+                      <span className="text-xs font-bold text-game-text">
                         {game.developer}
                       </span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-xs uppercase text-zinc-400">
+                    <div className="flex justify-between border-b border-game-text/10 pb-2">
+                      <span className="text-xs uppercase text-game-muted">
                         发行日期
                       </span>
-                      <span className="text-xs font-bold text-zinc-100">
+                      <span className="text-xs font-bold text-game-text">
                         {game.released}
                       </span>
                     </div>

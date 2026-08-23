@@ -28,6 +28,13 @@
   --color-movie-muted: #6b7280;
   --color-movie-accent: #dc2626;
   --color-movie-rank: #ef4444;
+
+  /* 游戏页浅色主题色 */
+  --color-game-bg: #f8f7f5;
+  --color-game-surface: #ffffff;
+  --color-game-surface-alt: #f2f0ec;
+  --color-game-text: #1f2937;
+  --color-game-muted: #6b7280;
 }
 
 @media (prefers-color-scheme: dark) {

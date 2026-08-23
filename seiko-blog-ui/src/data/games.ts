@@ -111,6 +111,6 @@ export const games: Game[] = [
 ];
 
 export const surfaceColors = [
-    "bg-zinc-900", // surface-container-low for odd
-    "bg-zinc-950", // surface for even
+    "bg-game-surface", // surface-container-low for odd
+    "bg-game-bg",      // surface for even
 ];
