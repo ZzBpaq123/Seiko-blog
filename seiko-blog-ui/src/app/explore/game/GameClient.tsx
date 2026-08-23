@@ -24,7 +24,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
               src={game.backgroundImage}
               alt={game.title}
               fill
-              className="object-cover grayscale-25 contrast-125 opacity-75"
+              className="object-cover"
               unoptimized
             />
             <div className="absolute inset-0 bg-linear-to-t from-game-bg via-transparent to-transparent" />
@@ -42,7 +42,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                 {game.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-game-surface px-3 py-1 text-[10px] uppercase tracking-widest font-medium"
+                    className="bg-game-surface px-3 py-1 text-xs uppercase tracking-widest font-medium"
                     style={{ color: game.accentColor }}
                   >
                     {tag}
@@ -90,7 +90,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                             alt={`${game.title} screenshot ${i + 1}`}
                             width={400}
                             height={225}
-                            className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                            className="w-full h-full object-cover"
                             unoptimized
                           />
                         </div>
@@ -109,7 +109,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                   </h4>
                   <div className="space-y-4">
                     <div className="flex justify-between border-b border-game-text/10 pb-2">
-                      <span className="text-xs uppercase text-game-muted">
+                      <span className="text-xs uppercase font-bold text-game-muted">
                         中文名
                       </span>
                       <span
@@ -120,7 +120,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                       </span>
                     </div>
                     <div className="flex justify-between border-b border-game-text/10 pb-2">
-                      <span className="text-xs uppercase text-game-muted">
+                      <span className="text-xs uppercase font-bold text-game-muted">
                         英文名
                       </span>
                       <span
@@ -131,7 +131,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                       </span>
                     </div>
                     <div className="flex justify-between border-b border-game-text/10 pb-2">
-                      <span className="text-xs uppercase text-game-muted">
+                      <span className="text-xs uppercase font-bold text-game-muted">
                         开发商
                       </span>
                       <span className="text-xs font-bold text-game-text">
@@ -139,7 +139,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                       </span>
                     </div>
                     <div className="flex justify-between border-b border-game-text/10 pb-2">
-                      <span className="text-xs uppercase text-game-muted">
+                      <span className="text-xs uppercase font-bold text-game-muted">
                         发行日期
                       </span>
                       <span className="text-xs font-bold text-game-text">
