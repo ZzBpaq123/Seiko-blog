@@ -54,9 +54,9 @@ export const pageHeaderStyles: Record<
     text: "text-stone-800",
   },
   "/explore/resource": {
-    bg: "bg-[#0a1210]/80 backdrop-blur-md",
-    scrolledBg: "bg-[#0a1210]/95 backdrop-blur-md shadow-lg",
-    text: "text-emerald-100",
+    bg: "bg-[#f8f7f5]/80 backdrop-blur-md",
+    scrolledBg: "bg-[#f8f7f5]/95 backdrop-blur-md shadow-sm",
+    text: "text-stone-800",
   },
   // 关于页
   "/about": {
@@ -122,9 +122,9 @@ export const pageFooterStyles: Record<
     text: "text-stone-500",
   },
   "/explore/resource": {
-    bg: "bg-[#0a1210]",
-    border: "border-[#14211d]",
-    text: "text-emerald-100/60",
+    bg: "bg-[#f8f7f5]",
+    border: "border-stone-200",
+    text: "text-stone-500",
   },
   // 关于我页
   "/about/myself": {
