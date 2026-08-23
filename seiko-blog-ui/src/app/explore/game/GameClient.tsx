@@ -24,7 +24,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
               src={game.backgroundImage}
               alt={game.title}
               fill
-              className="object-cover grayscale contrast-125 opacity-40"
+              className="object-cover grayscale-25 contrast-125 opacity-75"
               unoptimized
             />
             <div className="absolute inset-0 bg-linear-to-t from-game-bg via-transparent to-transparent" />
@@ -90,7 +90,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                             alt={`${game.title} screenshot ${i + 1}`}
                             width={400}
                             height={225}
-                            className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity"
+                            className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
                             unoptimized
                           />
                         </div>
