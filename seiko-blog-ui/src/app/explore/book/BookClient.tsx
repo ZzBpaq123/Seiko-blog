@@ -1,250 +1,146 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import { BookOpen } from "lucide-react";
 import type { BookVO } from "@/api/types";
 import { cn } from "@/utils/cn";
+import { useBookPagination } from "./hooks/useBookPagination";
+import BookList from "./components/BookList";
+
+const MoebiusScene = dynamic(
+  () => import("./components/MoebiusScene"),
+  { ssr: false, loading: () => <div className="bg-amber-50 dark:bg-amber-950" /> },
+);
 
 interface BookClientProps {
   initialBooks: BookVO[];
 }
 
-const PAGES_PER_BOOK = 2;
-
-function getPageInfo(pageIndex: number, books: BookVO[]) {
-  const totalContentPages = books.length * PAGES_PER_BOOK;
-
-  if (pageIndex >= totalContentPages) {
-    return { type: "back" as const };
-  }
-
-  const bookIndex = Math.floor(pageIndex / PAGES_PER_BOOK);
-  const pageInBook = pageIndex % PAGES_PER_BOOK;
-  const book = books[bookIndex];
-
-  return {
-    type: "content" as const,
-    book,
-    pageInBook,
-  };
-}
-
-function PageContent({
-  pageIndex,
-  side,
-  books,
-}: {
-  pageIndex: number;
-  side: "left" | "right";
-  books: BookVO[];
-}) {
-  const info = getPageInfo(pageIndex, books);
-  const isLeft = side === "left";
-
-  if (info.type === "back") {
-    return (
-      <div
-        className={cn(
-          "flex h-full w-full items-center justify-center bg-linear-to-br from-amber-600 to-amber-800",
-          isLeft ? "rounded-l-lg" : "rounded-r-lg",
-        )}
-      >
-        <div className="text-center">
-          <span className="text-2xl font-bold text-amber-100/90">END</span>
-          <p className="mt-2 text-sm text-amber-100/60">谢谢阅读</p>
-        </div>
-      </div>
-    );
-  }
-
-  const { book, pageInBook } = info;
-  const pageBase = cn(
-    "relative h-full w-full overflow-hidden",
-    isLeft
-      ? "rounded-l-lg bg-linear-to-r from-[#e8e4df] to-[#fffbf6]"
-      : "rounded-r-lg bg-linear-to-l from-[#e8e4df] to-[#fffbf6]",
-  );
-
-  if (isLeft) {
-    return (
-      <div className={pageBase}>
-        <Image
-          src={book.bookCover}
-          alt={book.bookName}
-          fill
-          className="object-cover"
-          unoptimized
-        />
-        <div className="absolute inset-y-0 right-0 w-5 bg-linear-to-l from-black/10 to-transparent" />
-      </div>
-    );
-  }
-
-  if (pageInBook === 0) {
-    return (
-      <div
-        className={cn(
-          pageBase,
-          "flex flex-col items-center justify-center p-4 text-center md:p-8",
-        )}
-      >
-        <h2 className="mb-3 text-xl font-bold text-amber-950 md:text-2xl lg:text-3xl">
-          {book.bookName}
-        </h2>
-        <p className="text-sm font-medium text-amber-800/80 md:text-base">
-          {book.bookAuthor}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className={cn(pageBase, "flex flex-col p-4 md:p-8")}>
-      <h3 className="mb-3 text-lg font-bold text-amber-950 md:text-xl">
-        {book.bookName}
-      </h3>
-      <div className="hide-scrollbar flex-1 overflow-y-auto">
-        <p className="whitespace-pre-line text-sm leading-relaxed text-amber-900/80 md:text-base">
-          {book.description}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function PageCorner({
-  position,
-  onClick,
-  label,
-}: {
-  position: "left" | "right";
-  onClick: () => void;
-  label: string;
-}) {
-  const isLeft = position === "left";
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "group absolute bottom-0 z-30 h-16 w-16 cursor-pointer animate-corner-float",
-        isLeft ? "left-0" : "right-0",
-      )}
-      aria-label={label}
-    >
-      <div
-        className={cn(
-          "absolute bottom-0 h-14 w-14 transition-transform duration-300 group-hover:scale-110",
-          isLeft
-            ? "left-0 rounded-tr-2xl bg-linear-to-tr from-stone-500/40 via-stone-200/70 to-transparent"
-            : "right-0 rounded-tl-2xl bg-linear-to-bl from-stone-500/40 via-stone-200/70 to-transparent",
-        )}
-        style={{
-          clipPath: isLeft
-            ? "polygon(0 0, 100% 100%, 0 100%)"
-            : "polygon(100% 0, 100% 100%, 0 100%)",
-          boxShadow: isLeft
-            ? "2px -2px 6px rgba(0,0,0,0.12)"
-            : "-2px -2px 6px rgba(0,0,0,0.12)",
-        }}
-      />
-      <div
-        className={cn(
-          "absolute bottom-2 transition-transform duration-300 group-hover:scale-110",
-          isLeft ? "left-2" : "right-2",
-        )}
-      >
-        {isLeft ? (
-          <ChevronLeft className="h-5 w-5 text-stone-700/70" />
-        ) : (
-          <ChevronRight className="h-5 w-5 text-stone-700/70" />
-        )}
-      </div>
-    </button>
-  );
-}
-
-function FlippingPage({
-  direction,
-  frontPage,
-  backPage,
-  books,
-}: {
-  direction: 1 | -1;
-  frontPage: number;
-  backPage: number;
-  books: BookVO[];
-}) {
-  const isNext = direction === 1;
-
-  return (
-    <div
-      className={cn(
-        "absolute top-0 h-full w-1/2",
-        isNext ? "right-0 origin-left animate-flip-next" : "left-0 origin-right animate-flip-prev",
-      )}
-      style={{ transformStyle: "preserve-3d" }}
-    >
-      <div
-        className="absolute inset-0 overflow-hidden shadow-xl"
-        style={{ backfaceVisibility: "hidden" }}
-      >
-        <PageContent
-          pageIndex={frontPage}
-          side={isNext ? "right" : "left"}
-          books={books}
-        />
-      </div>
-      <div
-        className="absolute inset-0 overflow-hidden shadow-xl"
-        style={{
-          backfaceVisibility: "hidden",
-          transform: "rotateY(180deg)",
-        }}
-      >
-        <PageContent
-          pageIndex={backPage}
-          side={isNext ? "left" : "right"}
-          books={books}
-        />
-      </div>
-    </div>
-  );
-}
+const SCROLL_LOCK_MS = 600;
+const SCROLL_THRESHOLD = 30;
+const PRELOAD_AHEAD = 2;
 
 export default function BookClient({ initialBooks }: BookClientProps) {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isFlipping, setIsFlipping] = useState(false);
-  const [flipDirection, setFlipDirection] = useState<1 | -1>(1);
-  const [flipKey, setFlipKey] = useState(0);
+  const { books, hasMore, isLoading, loadMore } = useBookPagination(initialBooks);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [scrollBoost, setScrollBoost] = useState(0);
+  const [reduceMotion, setReduceMotion] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+  const isScrollingRef = useRef(false);
+  const boostTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const totalContentPages = initialBooks.length * PAGES_PER_BOOK;
-  const totalPages = totalContentPages + 1;
+  const maxIndex = Math.max(0, books.length - 2);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsOpen(true), 300);
-    return () => clearTimeout(timer);
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleChange = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    mq.addEventListener("change", handleChange);
+    return () => mq.removeEventListener("change", handleChange);
   }, []);
 
-  const canGoNext = currentPage < totalPages - 1 && !isFlipping;
-  const canGoPrev = currentPage > 0 && !isFlipping;
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    mq.addEventListener("change", handleChange);
+    return () => mq.removeEventListener("change", handleChange);
+  }, []);
 
-  const triggerFlip = (direction: 1 | -1) => {
-    if (direction === 1 && !canGoNext) return;
-    if (direction === -1 && !canGoPrev) return;
+  const triggerBoost = useCallback(() => {
+    setScrollBoost(1.2);
+    if (boostTimeoutRef.current) clearTimeout(boostTimeoutRef.current);
+    boostTimeoutRef.current = setTimeout(() => setScrollBoost(0), 350);
+  }, []);
 
-    setFlipDirection(direction);
-    setIsFlipping(true);
-    setFlipKey((k) => k + 1);
+  const jumpTo = useCallback(
+    (target: number) => {
+      if (isScrollingRef.current) return;
 
-    setTimeout(() => {
-      setCurrentPage((p) => p + direction);
-      setIsFlipping(false);
-    }, 700);
-  };
+      const next = Math.max(0, Math.min(target, maxIndex));
+      if (next === currentIndex) return;
+
+      isScrollingRef.current = true;
+      setCurrentIndex(next);
+      triggerBoost();
+
+      if (
+        hasMore &&
+        !isLoading &&
+        next >= books.length - 2 - PRELOAD_AHEAD
+      ) {
+        loadMore();
+      }
+
+      setTimeout(() => {
+        isScrollingRef.current = false;
+      }, SCROLL_LOCK_MS);
+    },
+    [currentIndex, maxIndex, hasMore, isLoading, books.length, loadMore, triggerBoost],
+  );
+
+  const goTo = useCallback(
+    (direction: 1 | -1) => {
+      jumpTo(currentIndex + direction);
+    },
+    [currentIndex, jumpTo],
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined" || reduceMotion) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (isScrollingRef.current) {
+        e.preventDefault();
+        return;
+      }
+
+      if (e.deltaY > SCROLL_THRESHOLD) {
+        if (currentIndex < maxIndex) {
+          e.preventDefault();
+          goTo(1);
+        }
+      } else if (e.deltaY < -SCROLL_THRESHOLD) {
+        if (currentIndex > 0) {
+          e.preventDefault();
+          goTo(-1);
+        }
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [currentIndex, maxIndex, goTo, reduceMotion]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        e.preventDefault();
+        goTo(1);
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        goTo(-1);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [goTo]);
+
+  useEffect(() => {
+    return () => {
+      if (boostTimeoutRef.current) clearTimeout(boostTimeoutRef.current);
+    };
+  }, []);
 
   if (initialBooks.length === 0) {
     return (
@@ -257,150 +153,70 @@ export default function BookClient({ initialBooks }: BookClientProps) {
     );
   }
 
-  const targetPage = flipDirection === 1 ? currentPage + 1 : currentPage - 1;
-  const pageZ = isOpen ? 1 : -3;
-
   return (
-    <main className="-mb-16 -mt-14 flex min-h-screen items-center justify-center overflow-hidden bg-amber-50 px-4 py-16 dark:bg-amber-950">
-      <div className="relative w-full" style={{ perspective: "1500px" }}>
-        <div
-          className="relative mx-auto transition-transform duration-1000 ease-out motion-reduce:transition-none"
-          style={{
-            width: "min(92vw, 800px)",
-            height: "min(calc(92vw * 2 / 3), 533px)",
-            transform: isOpen ? "rotateY(0deg)" : "rotateY(-6deg)",
-            transformStyle: "preserve-3d",
-          }}
-        >
-          {/* 后封面 */}
-          <div
-            className="absolute left-0 top-0 h-full w-1/2 rounded-l-lg bg-linear-to-br from-amber-600 to-amber-800 shadow-2xl"
-            style={{ transform: "translateZ(-2px)" }}
-          >
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-2xl font-bold text-amber-100/80">END</span>
+    <main className="-mb-16 -mt-14 flex h-screen overflow-hidden bg-amber-50 dark:bg-amber-950">
+      {/* 左侧：3D 莫比乌斯环 */}
+      <section className="relative hidden h-full w-1/2 bg-amber-50 dark:bg-amber-950 lg:block">
+        <MoebiusScene
+          scrollBoost={scrollBoost}
+          reducedMotion={reduceMotion}
+          isDark={isDark}
+        />
+
+        <div className="absolute bottom-8 left-8 z-10">
+          <h1 className="text-4xl font-bold tracking-tight text-amber-950 dark:text-amber-50">
+            书籍
+          </h1>
+          <p className="mt-1 text-sm font-medium tracking-widest text-amber-800/50 dark:text-amber-200/50">
+            BOOKS
+          </p>
+        </div>
+      </section>
+
+      {/* 右侧：图书列表 */}
+      <section className="relative flex h-full w-full flex-col lg:w-1/2">
+        <div className="flex flex-1 flex-col overflow-hidden px-6 py-10 md:px-10">
+          <div className="mb-6 flex items-center justify-between">
+            <div className="lg:hidden">
+              <h1 className="text-2xl font-bold text-amber-950 dark:text-amber-50">书籍</h1>
+              <p className="text-xs tracking-widest text-amber-700/70 dark:text-amber-300/70">BOOKS</p>
+            </div>
+
+            <div className="flex items-center gap-3 text-sm text-amber-700/70 dark:text-amber-300/70">
+              <span>{currentIndex + 1}</span>
+              <span>/</span>
+              <span>{Math.max(1, books.length - 1)}</span>
             </div>
           </div>
 
-          {/* 翻页时的目标 spread（底层） */}
-          {isFlipping && (
-            <>
-              <div
-                className="absolute left-0 top-0 h-full w-1/2 overflow-hidden rounded-l-lg shadow-inner"
-                style={{ transform: "translateZ(0px)" }}
-              >
-                <PageContent
-                  pageIndex={targetPage}
-                  side="left"
-                  books={initialBooks}
-                />
-              </div>
-              <div
-                className="absolute left-1/2 top-0 h-full w-1/2 overflow-hidden rounded-r-lg shadow-inner"
-                style={{ transform: "translateZ(0px)" }}
-              >
-                <PageContent
-                  pageIndex={targetPage}
-                  side="right"
-                  books={initialBooks}
-                />
-              </div>
-            </>
-          )}
-
-          {/* 当前 spread 的左页 */}
-          <div
-            className="absolute left-0 top-0 h-full w-1/2 overflow-hidden rounded-l-lg shadow-inner transition-transform duration-1000 ease-out motion-reduce:transition-none"
-            style={{
-              transform: `translateZ(${pageZ}px)`,
-            }}
-          >
-            <PageContent
-              pageIndex={currentPage}
-              side="left"
-              books={initialBooks}
-            />
+          <div className="relative flex-1 overflow-hidden rounded-2xl border border-amber-900/5 bg-white/60 shadow-xl backdrop-blur-sm dark:border-amber-100/5 dark:bg-black/20">
+            <BookList books={books} currentIndex={currentIndex} />
           </div>
 
-          {/* 当前 spread 的右页 */}
-          <div
-            className="absolute left-1/2 top-0 h-full w-1/2 overflow-hidden rounded-r-lg shadow-inner transition-transform duration-1000 ease-out motion-reduce:transition-none"
-            style={{
-              transform: `translateZ(${pageZ}px)`,
-            }}
-          >
-            <PageContent
-              pageIndex={currentPage}
-              side="right"
-              books={initialBooks}
-            />
+          <div className="mt-6 flex items-center justify-between text-xs text-amber-700/60 dark:text-amber-300/60">
+            {/*<p>滚动鼠标或按 ↑ / ↓ 翻阅</p>*/}
+            {isLoading && <span className="animate-pulse">加载中…</span>}
           </div>
-
-          {/* 前封面（闭合时覆盖右页） */}
-          <div
-            className="absolute left-1/2 top-0 h-full w-1/2 origin-left rounded-r-lg shadow-2xl transition-transform duration-1000 ease-out motion-reduce:transition-none"
-            style={{
-              transform: isOpen
-                ? "rotateY(-175deg) translateZ(0px)"
-                : "rotateY(0deg) translateZ(12px)",
-              transformStyle: "preserve-3d",
-            }}
-          >
-            <div
-              className="absolute inset-0 flex flex-col items-center justify-center rounded-r-lg bg-linear-to-br from-amber-500 to-amber-700 p-6"
-              style={{ backfaceVisibility: "hidden" }}
-            >
-              <BookOpen className="mb-4 h-10 w-10 text-amber-100/80 md:h-14 md:w-14" />
-              <h1 className="text-3xl font-bold text-amber-50 md:text-4xl">书籍</h1>
-              <p className="mt-2 text-sm font-medium tracking-widest text-amber-100/70">
-                BOOKS
-              </p>
-              <div className="absolute inset-y-0 left-0 w-3 bg-black/10" />
-            </div>
-            <div
-              className="absolute inset-0 rounded-r-lg bg-amber-100"
-              style={{
-                backfaceVisibility: "hidden",
-                transform: "rotateY(180deg)",
-              }}
-            />
-          </div>
-
-          {/* 翻页动画层 */}
-          {isFlipping && (
-            <FlippingPage
-              key={flipKey}
-              direction={flipDirection}
-              frontPage={currentPage}
-              backPage={targetPage}
-              books={initialBooks}
-            />
-          )}
-
-          {/* 左下角翘角（向前翻页） */}
-          {canGoPrev && (
-            <PageCorner
-              position="left"
-              onClick={() => triggerFlip(-1)}
-              label="上一页"
-            />
-          )}
-
-          {/* 右下角翘角（向后翻页） */}
-          {canGoNext && (
-            <PageCorner
-              position="right"
-              onClick={() => triggerFlip(1)}
-              label="下一页"
-            />
-          )}
         </div>
 
-        {/* 提示文字 */}
-        <p className="mt-8 text-center text-sm text-amber-700/70 dark:text-amber-300/70">
-          点击页角翻阅书籍
-        </p>
-      </div>
+        {/* 滚动指示器 */}
+        <div className="absolute right-4 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-2">
+          {Array.from({ length: Math.min(books.length - 1, 12) }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => jumpTo(i)}
+              className={cn(
+                "h-2 w-2 rounded-full transition-all duration-300",
+                i === currentIndex
+                  ? "scale-125 bg-amber-600 dark:bg-amber-400"
+                  : "bg-amber-900/20 hover:bg-amber-900/40 dark:bg-amber-100/20 dark:hover:bg-amber-100/40",
+              )}
+              aria-label={`切换到第 ${i + 1} 屏`}
+            />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
