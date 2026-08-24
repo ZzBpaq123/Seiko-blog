@@ -117,6 +117,7 @@ export default function DictsPage() {
     pageResult: typePageResult,
     records: typeRecords,
     refresh: refreshTypes,
+    updateRecord: updateTypeRecord,
   } = usePagedList<DictTypeVO>({
     pageSize: TYPE_PAGE_SIZE,
     deps: [debouncedTypeSearch],
@@ -147,6 +148,7 @@ export default function DictsPage() {
     records: itemRecords,
     refresh: refreshItems,
     reset: resetItems,
+    updateRecord: updateItemRecord,
   } = usePagedList<DictItemVO>({
     pageSize: ITEM_PAGE_SIZE,
     deps: [debouncedItemSearch, activeType?.id],
@@ -219,14 +221,21 @@ export default function DictsPage() {
 
   const handleToggleType = async (type: DictTypeVO) => {
     setTypeTogglingId(type.id);
+    const nextEnabled = !type.enabled;
+
+    updateTypeRecord(type.id, (t) => ({ ...t, enabled: nextEnabled }));
+    if (selectedType?.id === type.id) {
+      setSelectedType({ ...type, enabled: nextEnabled });
+    }
+
     try {
-      await updateDictTypeEnabled(type.id, !type.enabled);
+      await updateDictTypeEnabled(type.id, nextEnabled);
       notifySuccess("字典类型状态更新成功");
-      if (selectedType?.id === type.id) {
-        setSelectedType({ ...type, enabled: !type.enabled });
-      }
-      refreshTypes();
     } catch (err) {
+      updateTypeRecord(type.id, (t) => ({ ...t, enabled: type.enabled }));
+      if (selectedType?.id === type.id) {
+        setSelectedType(type);
+      }
       notifyError(err instanceof Error ? err.message : "状态更新失败");
     } finally {
       setTypeTogglingId(null);
@@ -265,11 +274,15 @@ export default function DictsPage() {
 
   const handleToggleItem = async (item: DictItemVO) => {
     setItemTogglingId(item.id);
+    const nextEnabled = !item.enabled;
+
+    updateItemRecord(item.id, (i) => ({ ...i, enabled: nextEnabled }));
+
     try {
-      await updateDictItemEnabled(item.id, !item.enabled);
+      await updateDictItemEnabled(item.id, nextEnabled);
       notifySuccess("字典项状态更新成功");
-      refreshItems();
     } catch (err) {
+      updateItemRecord(item.id, (i) => ({ ...i, enabled: item.enabled }));
       notifyError(err instanceof Error ? err.message : "状态更新失败");
     } finally {
       setItemTogglingId(null);

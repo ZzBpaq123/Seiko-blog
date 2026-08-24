@@ -14,13 +14,15 @@ interface UsePagedListOptions<T> {
   /** 查询条件依赖（如防抖后的搜索词、筛选项）；变化时自动回到第 1 页并重取 */
   deps?: unknown[];
   pageSize?: number;
+  /** 可选的 id 提取器；未提供时默认读取 record.id */
+  getId?: (record: T) => number | string;
 }
 
 /**
  * 列表页不可约的取数状态机：分页 + 加载态 + 取消标记 + 失败兜底。
  * 各列表页只需声明「如何取数」与「查询依赖」，其余逻辑只此一份。
  */
-export function usePagedList<T>({ fetch, deps = [], pageSize = 10 }: UsePagedListOptions<T>) {
+export function usePagedList<T>({ fetch, deps = [], pageSize = 10, getId }: UsePagedListOptions<T>) {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -28,6 +30,15 @@ export function usePagedList<T>({ fetch, deps = [], pageSize = 10 }: UsePagedLis
 
   const depsKey = JSON.stringify(deps);
   const prevDepsKey = useRef(depsKey);
+
+  const keyOf = getId ?? ((record: T) => (record as unknown as { id?: number | string }).id ?? 0);
+
+  const updateRecord = (id: number | string, updater: (record: T) => T) => {
+    setPageResult((prev) => ({
+      ...prev,
+      records: prev.records.map((record) => (keyOf(record) === id ? updater(record) : record)),
+    }));
+  };
 
   useEffect(() => {
     const depsChanged = prevDepsKey.current !== depsKey;
@@ -76,5 +87,6 @@ export function usePagedList<T>({ fetch, deps = [], pageSize = 10 }: UsePagedLis
     records: pageResult.records ?? [],
     refresh,
     reset,
+    updateRecord,
   };
 }

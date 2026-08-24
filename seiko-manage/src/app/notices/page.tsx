@@ -35,7 +35,7 @@ export default function NoticesPage() {
   const debouncedSearch = useDebounce(search);
   const { options: commonBooleanOptions } = useDictOptions("common_boolean");
 
-  const { page, setPage, loading, pageResult, records, refresh, reset } = usePagedList<NoticeVO>({
+  const { page, setPage, loading, pageResult, records, refresh, reset, updateRecord } = usePagedList<NoticeVO>({
     pageSize: PAGE_SIZE,
     deps: [debouncedSearch, statusFilter],
     fetch: (page) =>
@@ -53,14 +53,24 @@ export default function NoticesPage() {
     reset();
   };
 
-  // 切换启用状态
+  // 切换启用状态（无筛选时局部乐观更新，失败回滚；有状态筛选时刷新保证列表一致）
   const handleToggle = async (notice: NoticeVO) => {
     setTogglingId(notice.id);
+    const nextEnabled = !notice.enabled;
+    const shouldRefresh = statusFilter !== "";
+
+    if (!shouldRefresh) {
+      updateRecord(notice.id, (n) => ({ ...n, enabled: nextEnabled }));
+    }
+
     try {
-      await updateNoticeEnabled(notice.id, !notice.enabled);
+      await updateNoticeEnabled(notice.id, nextEnabled);
       notifySuccess("公告状态更新成功");
-      refresh();
+      if (shouldRefresh) refresh();
     } catch (err) {
+      if (!shouldRefresh) {
+        updateRecord(notice.id, (n) => ({ ...n, enabled: notice.enabled }));
+      }
       notifyError(err instanceof Error ? err.message : "操作失败");
     } finally {
       setTogglingId(null);

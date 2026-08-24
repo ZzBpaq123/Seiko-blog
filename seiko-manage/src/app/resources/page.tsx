@@ -45,7 +45,7 @@ export default function ResourcesPage() {
   const debouncedSearch = useDebounce(search);
   const { options: commonBooleanOptions } = useDictOptions("common_boolean");
 
-  const { page, setPage, loading, pageResult, records, refresh, reset } = usePagedList<ResourceVO>({
+  const { page, setPage, loading, pageResult, records, refresh, reset, updateRecord } = usePagedList<ResourceVO>({
     pageSize: PAGE_SIZE,
     deps: [debouncedSearch, categoryFilter, statusFilter],
     fetch: (page) =>
@@ -65,14 +65,24 @@ export default function ResourcesPage() {
     reset();
   };
 
-  // 切换启用状态
+  // 切换启用状态（无筛选时局部乐观更新，失败回滚；有状态筛选时刷新保证列表一致）
   const handleToggle = async (resource: ResourceVO) => {
     setTogglingId(resource.id);
+    const nextEnabled = !resource.enabled;
+    const shouldRefresh = statusFilter !== "";
+
+    if (!shouldRefresh) {
+      updateRecord(resource.id, (r) => ({ ...r, enabled: nextEnabled }));
+    }
+
     try {
-      await updateResourceEnabled(resource.id, !resource.enabled);
+      await updateResourceEnabled(resource.id, nextEnabled);
       notifySuccess("资源状态更新成功");
-      refresh();
+      if (shouldRefresh) refresh();
     } catch (err) {
+      if (!shouldRefresh) {
+        updateRecord(resource.id, (r) => ({ ...r, enabled: resource.enabled }));
+      }
       notifyError(err instanceof Error ? err.message : "操作失败");
     } finally {
       setTogglingId(null);
