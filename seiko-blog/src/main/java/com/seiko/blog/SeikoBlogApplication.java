@@ -15,6 +15,14 @@ public class SeikoBlogApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SeikoBlogApplication.class, args);
+        System.out.println("""
+                 ____       _ _           ____  _            \s
+                / ___|  ___(_) | _____   | __ )| | ___   __ _\s
+                \\___ \\ / _ \\ | |/ / _ \\  |  _ \\| |/ _ \\ / _` |
+                 ___) |  __/ |   < (_) | | |_) | | (_) | (_| |
+                |____/ \\___|_|_|\\_\\___/  |____/|_|\\___/ \\__, |
+                                                        |___/\s
+                """);
     }
 
 }
