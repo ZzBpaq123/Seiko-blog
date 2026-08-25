@@ -52,7 +52,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ReadTrendVO> getReadTrend(int days) {
-        int validDays = Math.min(Math.max(days, 1), 30);
+        int validDays = Math.clamp(days, 1, 30);
         LocalDateTime start = LocalDate.now().minusDays(validDays - 1).atStartOfDay();
         List<ReadTrendVO> rows = logMapper.selectReadTrend(start);
         Map<String, Long> countMap = rows.stream()
@@ -73,7 +73,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<CreationTrendVO> getCreationTrend(int days) {
-        int validDays = Math.min(Math.max(days, 1), 30);
+        int validDays = Math.clamp(days, 1, 30);
         LocalDateTime start = LocalDate.now().minusDays(validDays - 1).atStartOfDay();
 
         Map<String, Long> postMap = toCountMap(postMapper.selectCreationTrend(start));
@@ -109,6 +109,6 @@ public class StatsServiceImpl implements StatsService {
         Object total = postMapper.selectObjs(
                 new QueryWrapper<Post>().select("IFNULL(SUM(read_num), 0) AS total")
         ).stream().findFirst().orElse(0L);
-        return total == null ? 0L : ((Number) total).longValue();
+        return ((Number) total).longValue();
     }
 }
