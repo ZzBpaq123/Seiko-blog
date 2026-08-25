@@ -2,6 +2,7 @@ package com.seiko.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -32,7 +33,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeMapper noticeMapper;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_NOTICE, key = "'enabled'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_NOTICE, key = "'enabled'")
     public List<NoticeVO> getEnabledNoticeList() {
         return noticeMapper.selectList(
                 new LambdaQueryWrapper<Notice>()
@@ -43,7 +44,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_NOTICE, key = "'id:' + #id", unless = "#result == null")
+    @Cacheable(cacheNames = RedisConstant.CACHE_NOTICE, key = "'id:' + #id", unless = "#result == null")
     public NoticeVO getNoticeById(Long id) {
         Notice notice = noticeMapper.selectById(id);
         if (notice == null || notice.getIsDeleted() == 1) {
@@ -79,7 +80,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_NOTICE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_NOTICE, allEntries = true)
     public Long createNotice(NoticeDTO dto) {
         Notice notice = new Notice();
         BeanUtils.copyProperties(dto, notice);
@@ -95,7 +96,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_NOTICE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_NOTICE, allEntries = true)
     public Boolean updateNotice(Long id, NoticeDTO dto) {
         Notice notice = noticeMapper.selectById(id);
         if (notice == null || notice.getIsDeleted() == 1) {
@@ -109,7 +110,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_NOTICE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_NOTICE, allEntries = true)
     public Boolean deleteNotice(Long id) {
         Notice notice = noticeMapper.selectById(id);
         if (notice == null || notice.getIsDeleted() == 1) {
@@ -121,7 +122,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_NOTICE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_NOTICE, allEntries = true)
     public Boolean updateEnabled(Long id, Boolean enabled) {
         Notice notice = noticeMapper.selectById(id);
         if (notice == null || notice.getIsDeleted() == 1) {

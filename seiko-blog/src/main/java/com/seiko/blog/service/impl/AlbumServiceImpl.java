@@ -3,6 +3,7 @@ package com.seiko.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -37,7 +38,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
     private final PhotoMapper photoMapper;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_ALBUM, key = "'all'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_ALBUM, key = "'all'")
     public List<AlbumVO> getAlbumList() {
         return albumMapper.selectList(
                 new LambdaQueryWrapper<Album>()
@@ -78,7 +79,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_ALBUM, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_ALBUM, allEntries = true)
     public Long createAlbum(AlbumDTO dto) {
         Album album = new Album();
         BeanUtils.copyProperties(dto, album);
@@ -90,7 +91,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_ALBUM, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_ALBUM, allEntries = true)
     public Boolean updateAlbum(Long id, AlbumDTO dto) {
         Album album = this.getById(id);
         if (album == null) {
@@ -107,8 +108,8 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     @Caching(evict = {
-            @CacheEvict(cacheNames = RedisCacheConfig.CACHE_ALBUM, allEntries = true),
-            @CacheEvict(cacheNames = RedisCacheConfig.CACHE_PHOTO, allEntries = true)
+            @CacheEvict(cacheNames = RedisConstant.CACHE_ALBUM, allEntries = true),
+            @CacheEvict(cacheNames = RedisConstant.CACHE_PHOTO, allEntries = true)
     })
     public Boolean deleteAlbum(Long id) {
         Album album = this.getById(id);

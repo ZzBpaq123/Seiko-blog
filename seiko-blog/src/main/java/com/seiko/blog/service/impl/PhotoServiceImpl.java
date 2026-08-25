@@ -3,6 +3,7 @@ package com.seiko.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -36,7 +37,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
     private final AlbumMapper albumMapper;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_PHOTO, key = "'all'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_PHOTO, key = "'all'")
     public List<PhotoVO> getPhotoList() {
         return photoMapper.selectList(
                 new LambdaQueryWrapper<Photo>()
@@ -46,7 +47,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_PHOTO, key = "'id:' + #id", unless = "#result == null")
+    @Cacheable(cacheNames = RedisConstant.CACHE_PHOTO, key = "'id:' + #id", unless = "#result == null")
     public PhotoVO getPhotoById(Long id) {
         Photo photo = photoMapper.selectById(id);
         if (photo == null || photo.getIsDeleted() == 1) {
@@ -56,7 +57,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_PHOTO, key = "'location:' + #location")
+    @Cacheable(cacheNames = RedisConstant.CACHE_PHOTO, key = "'location:' + #location")
     public List<PhotoVO> getPhotoListByLocation(String location) {
         return photoMapper.selectList(
                 new LambdaQueryWrapper<Photo>()
@@ -67,7 +68,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_PHOTO, key = "'album:' + #albumId")
+    @Cacheable(cacheNames = RedisConstant.CACHE_PHOTO, key = "'album:' + #albumId")
     public List<PhotoVO> getPhotosByAlbumId(Long albumId) {
         return photoMapper.selectList(
                 new LambdaQueryWrapper<Photo>()
@@ -104,7 +105,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_PHOTO, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_PHOTO, allEntries = true)
     public Long createPhoto(PhotoDTO dto) {
         checkAlbumExists(dto.getAlbumId());
 
@@ -117,7 +118,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_PHOTO, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_PHOTO, allEntries = true)
     public Boolean batchCreatePhotos(List<PhotoDTO> dtoList) {
         if (dtoList == null || dtoList.isEmpty()) {
             throw new BusinessException(ResultCode.PARAM_ERROR.getCode(), "照片列表不能为空");
@@ -135,7 +136,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_PHOTO, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_PHOTO, allEntries = true)
     public Boolean updatePhoto(Long id, PhotoDTO dto) {
         Photo photo = this.getById(id);
         if (photo == null) {
@@ -152,7 +153,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_PHOTO, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_PHOTO, allEntries = true)
     public Boolean deletePhoto(Long id) {
         Photo photo = this.getById(id);
         if (photo == null) {

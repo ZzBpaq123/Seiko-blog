@@ -3,6 +3,7 @@ package com.seiko.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -34,7 +35,7 @@ public class FootprintServiceImpl extends ServiceImpl<FootprintMapper, Footprint
     private final FootprintMapper footprintMapper;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_FOOTPRINT, key = "'all'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_FOOTPRINT, key = "'all'")
     public List<FootprintVO> getFootprintList() {
         return footprintMapper.selectList(
                 new LambdaQueryWrapper<Footprint>()
@@ -43,7 +44,7 @@ public class FootprintServiceImpl extends ServiceImpl<FootprintMapper, Footprint
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_FOOTPRINT, key = "'id:' + #id", unless = "#result == null")
+    @Cacheable(cacheNames = RedisConstant.CACHE_FOOTPRINT, key = "'id:' + #id", unless = "#result == null")
     public FootprintVO getFootprintById(Long id) {
         Footprint footprint = this.getById(id);
         if (footprint == null) {
@@ -53,7 +54,7 @@ public class FootprintServiceImpl extends ServiceImpl<FootprintMapper, Footprint
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_FOOTPRINT, key = "'type:' + #type")
+    @Cacheable(cacheNames = RedisConstant.CACHE_FOOTPRINT, key = "'type:' + #type")
     public List<FootprintVO> getFootprintListByType(String type) {
         validateFootprintType(type);
 
@@ -95,7 +96,7 @@ public class FootprintServiceImpl extends ServiceImpl<FootprintMapper, Footprint
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_FOOTPRINT, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_FOOTPRINT, allEntries = true)
     public Long createFootprint(FootprintDTO dto) {
         validateFootprintType(dto.getFootprintType());
 
@@ -114,7 +115,7 @@ public class FootprintServiceImpl extends ServiceImpl<FootprintMapper, Footprint
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_FOOTPRINT, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_FOOTPRINT, allEntries = true)
     public Boolean updateFootprint(Long id, FootprintDTO dto) {
         Footprint footprint = this.getById(id);
         if (footprint == null) {
@@ -137,7 +138,7 @@ public class FootprintServiceImpl extends ServiceImpl<FootprintMapper, Footprint
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_FOOTPRINT, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_FOOTPRINT, allEntries = true)
     public Boolean deleteFootprint(Long id) {
         Footprint footprint = this.getById(id);
         if (footprint == null) {

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.seiko.common.constant.RedisConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.cache.Cache;
@@ -26,7 +27,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,31 +48,13 @@ import java.util.Map;
 @Slf4j
 public class RedisCacheConfig implements CachingConfigurer {
 
-    /** 缓存区名称常量，供各 Service 的缓存注解引用 */
-    public static final String CACHE_BOOK = "book";
-    public static final String CACHE_MOVIE = "movie";
-    public static final String CACHE_FOOTPRINT = "footprint";
-    public static final String CACHE_PHOTO = "photo";
-    public static final String CACHE_ALBUM = "album";
-    public static final String CACHE_NOTICE = "notice";
-    public static final String CACHE_COMMENT = "comment";
-    public static final String CACHE_RESOURCE = "resource";
-    public static final String CACHE_POST = "post";
-    public static final String CACHE_TAG = "tag";
-
-    /** 默认缓存有效期：30 分钟 */
-    private static final Duration DEFAULT_TTL = Duration.ofMinutes(30);
-
-    /** 评论缓存有效期：5 分钟（评论由前台公开写入，时效性要求更高） */
-    private static final Duration COMMENT_TTL = Duration.ofMinutes(5);
-
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisSerializationContext.SerializationPair<Object> valueSerializer =
                 RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer());
 
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(DEFAULT_TTL)
+                .entryTtl(RedisConstant.DEFAULT_TTL)
                 // 不缓存 null，避免穿透污染
                 .disableCachingNullValues()
                 // key 前缀使用 cacheName:，与现有 login:* 键风格一致
@@ -82,7 +64,7 @@ public class RedisCacheConfig implements CachingConfigurer {
 
         // 按区差异化 TTL
         Map<String, RedisCacheConfiguration> initialConfigs = new HashMap<>();
-        initialConfigs.put(CACHE_COMMENT, defaultConfig.entryTtl(COMMENT_TTL));
+        initialConfigs.put(RedisConstant.CACHE_COMMENT, defaultConfig.entryTtl(RedisConstant.COMMENT_TTL));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(defaultConfig)

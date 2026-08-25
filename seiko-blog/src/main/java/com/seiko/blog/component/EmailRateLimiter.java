@@ -1,5 +1,6 @@
 package com.seiko.blog.component;
 
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.VerificationCodeProperties;
@@ -22,10 +23,6 @@ public class EmailRateLimiter {
     private final StringRedisTemplate redisTemplate;
     private final VerificationCodeProperties properties;
 
-    private static final String EMAIL_COOLDOWN_PREFIX = "email:send:cooldown:";
-    private static final String IP_COUNT_PREFIX = "email:send:count:";
-    private static final String IP_LOCK_PREFIX = "email:send:lock:";
-
     /**
      * 检查是否可以向指定邮箱发送验证码
      */
@@ -37,12 +34,12 @@ public class EmailRateLimiter {
         String normalizedEmail = normalizeEmail(email);
         String ip = getClientIp(request);
 
-        String emailCooldownKey = EMAIL_COOLDOWN_PREFIX + normalizedEmail;
+        String emailCooldownKey = RedisConstant.EMAIL_COOLDOWN_PREFIX + normalizedEmail;
         if (redisTemplate.hasKey(emailCooldownKey)) {
             throw new BusinessException(ResultCode.VERIFICATION_CODE_TOO_FREQUENT);
         }
 
-        String ipLockKey = IP_LOCK_PREFIX + ip;
+        String ipLockKey = RedisConstant.EMAIL_IP_LOCK_PREFIX + ip;
         if (redisTemplate.hasKey(ipLockKey)) {
             throw new BusinessException(ResultCode.VERIFICATION_CODE_TOO_FREQUENT.getCode(),
                     "当前 IP 发送验证码次数过多，请 " + properties.getIpLockSeconds() / 60 + " 分钟后再试");
@@ -60,15 +57,15 @@ public class EmailRateLimiter {
         String normalizedEmail = normalizeEmail(email);
         String ip = getClientIp(request);
 
-        redisTemplate.opsForValue().set(EMAIL_COOLDOWN_PREFIX + normalizedEmail, "1",
+        redisTemplate.opsForValue().set(RedisConstant.EMAIL_COOLDOWN_PREFIX + normalizedEmail, "1",
                 properties.getResendCooldownSeconds(), TimeUnit.SECONDS);
 
-        String ipCountKey = IP_COUNT_PREFIX + ip;
+        String ipCountKey = RedisConstant.IP_COUNT_PREFIX + ip;
         Long ipSendCount = redisTemplate.opsForValue().increment(ipCountKey);
         redisTemplate.expire(ipCountKey, 3600, TimeUnit.SECONDS);
 
         if (ipSendCount != null && ipSendCount >= properties.getIpMaxSendsPerHour()) {
-            redisTemplate.opsForValue().set(IP_LOCK_PREFIX + ip, "1",
+            redisTemplate.opsForValue().set(RedisConstant.EMAIL_IP_LOCK_PREFIX + ip, "1",
                     properties.getIpLockSeconds(), TimeUnit.SECONDS);
             redisTemplate.delete(ipCountKey);
             log.warn("IP [{}] 邮箱验证码发送次数达到阈值，已锁定 {} 秒", ip, properties.getIpLockSeconds());

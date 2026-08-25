@@ -1,5 +1,6 @@
 package com.seiko.blog.component;
 
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.LoginRateLimitProperties;
@@ -29,26 +30,6 @@ public class LoginRateLimiter {
     private final LoginRateLimitProperties properties;
 
     /**
-     * 账号失败次数计数前缀
-     */
-    private static final String ACCOUNT_FAIL_COUNT_PREFIX = "login:fail:account:";
-
-    /**
-     * IP 失败次数计数前缀
-     */
-    private static final String IP_FAIL_COUNT_PREFIX = "login:fail:ip:";
-
-    /**
-     * 账号锁定前缀
-     */
-    private static final String ACCOUNT_LOCK_PREFIX = "login:lock:account:";
-
-    /**
-     * IP 锁定前缀
-     */
-    private static final String IP_LOCK_PREFIX = "login:lock:ip:";
-
-    /**
      * 检查当前登录请求是否已被限制
      *
      * @param request  HTTP 请求
@@ -62,12 +43,12 @@ public class LoginRateLimiter {
         String accountKey = normalizeUsername(username);
         String ip = getClientIp(request);
 
-        String accountLockKey = ACCOUNT_LOCK_PREFIX + accountKey;
+        String accountLockKey = RedisConstant.ACCOUNT_LOCK_PREFIX + accountKey;
         if (redisTemplate.hasKey(accountLockKey)) {
             throw new BusinessException(ResultCode.TOO_MANY_REQUESTS.getCode(), "登录失败次数过多，请 " + properties.getLockSeconds() / 60 + " 分钟后再试");
         }
 
-        String ipLockKey = IP_LOCK_PREFIX + ip;
+        String ipLockKey = RedisConstant.LOGIN_IP_LOCK_PREFIX + ip;
         if (redisTemplate.hasKey(ipLockKey)) {
             throw new BusinessException(ResultCode.TOO_MANY_REQUESTS.getCode(), "当前 IP 登录失败次数过多，请 " + properties.getLockSeconds() / 60 + " 分钟后再试");
         }
@@ -88,22 +69,22 @@ public class LoginRateLimiter {
         String ip = getClientIp(request);
 
         // 账号级失败计数
-        Long accountFailCount = redisTemplate.opsForValue().increment(ACCOUNT_FAIL_COUNT_PREFIX + accountKey);
-        redisTemplate.expire(ACCOUNT_FAIL_COUNT_PREFIX + accountKey, properties.getWindowSeconds(), TimeUnit.SECONDS);
+        Long accountFailCount = redisTemplate.opsForValue().increment(RedisConstant.ACCOUNT_FAIL_COUNT_PREFIX + accountKey);
+        redisTemplate.expire(RedisConstant.ACCOUNT_FAIL_COUNT_PREFIX + accountKey, properties.getWindowSeconds(), TimeUnit.SECONDS);
 
         if (accountFailCount != null && accountFailCount >= properties.getMaxAttempts()) {
-            redisTemplate.opsForValue().set(ACCOUNT_LOCK_PREFIX + accountKey, "1", properties.getLockSeconds(), TimeUnit.SECONDS);
-            redisTemplate.delete(ACCOUNT_FAIL_COUNT_PREFIX + accountKey);
+            redisTemplate.opsForValue().set(RedisConstant.ACCOUNT_LOCK_PREFIX + accountKey, "1", properties.getLockSeconds(), TimeUnit.SECONDS);
+            redisTemplate.delete(RedisConstant.ACCOUNT_FAIL_COUNT_PREFIX + accountKey);
             log.warn("账号 [{}] 登录失败次数达到阈值，已锁定 {} 秒", accountKey, properties.getLockSeconds());
         }
 
         // IP 级失败计数
-        Long ipFailCount = redisTemplate.opsForValue().increment(IP_FAIL_COUNT_PREFIX + ip);
-        redisTemplate.expire(IP_FAIL_COUNT_PREFIX + ip, properties.getWindowSeconds(), TimeUnit.SECONDS);
+        Long ipFailCount = redisTemplate.opsForValue().increment(RedisConstant.IP_FAIL_COUNT_PREFIX + ip);
+        redisTemplate.expire(RedisConstant.IP_FAIL_COUNT_PREFIX + ip, properties.getWindowSeconds(), TimeUnit.SECONDS);
 
         if (ipFailCount != null && ipFailCount >= properties.getIpMaxAttempts()) {
-            redisTemplate.opsForValue().set(IP_LOCK_PREFIX + ip, "1", properties.getLockSeconds(), TimeUnit.SECONDS);
-            redisTemplate.delete(IP_FAIL_COUNT_PREFIX + ip);
+            redisTemplate.opsForValue().set(RedisConstant.LOGIN_IP_LOCK_PREFIX + ip, "1", properties.getLockSeconds(), TimeUnit.SECONDS);
+            redisTemplate.delete(RedisConstant.IP_FAIL_COUNT_PREFIX + ip);
             log.warn("IP [{}] 登录失败次数达到阈值，已锁定 {} 秒", ip, properties.getLockSeconds());
         }
     }
@@ -122,10 +103,10 @@ public class LoginRateLimiter {
         String accountKey = normalizeUsername(username);
         String ip = getClientIp(request);
 
-        redisTemplate.delete(ACCOUNT_FAIL_COUNT_PREFIX + accountKey);
-        redisTemplate.delete(IP_FAIL_COUNT_PREFIX + ip);
-        redisTemplate.delete(ACCOUNT_LOCK_PREFIX + accountKey);
-        redisTemplate.delete(IP_LOCK_PREFIX + ip);
+        redisTemplate.delete(RedisConstant.ACCOUNT_FAIL_COUNT_PREFIX + accountKey);
+        redisTemplate.delete(RedisConstant.IP_FAIL_COUNT_PREFIX + ip);
+        redisTemplate.delete(RedisConstant.ACCOUNT_LOCK_PREFIX + accountKey);
+        redisTemplate.delete(RedisConstant.LOGIN_IP_LOCK_PREFIX + ip);
     }
 
     /**

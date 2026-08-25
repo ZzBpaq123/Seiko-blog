@@ -2,6 +2,7 @@ package com.seiko.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -34,7 +35,7 @@ public class TagServiceImpl implements TagService {
     private final PostTagMapper postTagMapper;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_TAG,
+    @Cacheable(cacheNames = RedisConstant.CACHE_TAG,
             key = "'page:' + #page + ':' + #size + ':' + (#keyword ?: '')")
     public Page<TagVO> getTagPage(long page, long size, String keyword) {
         Page<Tag> tagPage = new Page<>(page, size);
@@ -69,7 +70,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {RedisCacheConfig.CACHE_TAG, RedisCacheConfig.CACHE_POST}, allEntries = true)
+    @CacheEvict(cacheNames = {RedisConstant.CACHE_TAG, RedisConstant.CACHE_POST}, allEntries = true)
     public Long createTag(TagDTO dto) {
         String name = dto.getName().trim();
         String slug = resolveSlug(dto.getSlug(), name);
@@ -86,7 +87,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {RedisCacheConfig.CACHE_TAG, RedisCacheConfig.CACHE_POST}, allEntries = true)
+    @CacheEvict(cacheNames = {RedisConstant.CACHE_TAG, RedisConstant.CACHE_POST}, allEntries = true)
     public Boolean updateTag(Long id, TagDTO dto) {
         Tag tag = tagMapper.selectById(id);
         if (tag == null || tag.getIsDeleted() == 1) {
@@ -106,7 +107,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = {RedisCacheConfig.CACHE_TAG, RedisCacheConfig.CACHE_POST}, allEntries = true)
+    @CacheEvict(cacheNames = {RedisConstant.CACHE_TAG, RedisConstant.CACHE_POST}, allEntries = true)
     public Boolean deleteTag(Long id) {
         Tag tag = tagMapper.selectById(id);
         if (tag == null || tag.getIsDeleted() == 1) {

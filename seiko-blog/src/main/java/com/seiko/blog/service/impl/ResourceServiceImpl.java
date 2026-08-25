@@ -2,6 +2,7 @@ package com.seiko.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -39,7 +40,7 @@ public class ResourceServiceImpl implements ResourceService {
     private static final String UNCATEGORIZED = "未分类";
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_RESOURCE, key = "'groups'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_RESOURCE, key = "'groups'")
     public List<ResourceGroupVO> getEnabledResourceGroups() {
         List<Resource> resources = resourceMapper.selectList(
                 new LambdaQueryWrapper<Resource>()
@@ -105,7 +106,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_RESOURCE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_RESOURCE, allEntries = true)
     public Long createResource(ResourceDTO dto) {
         Resource resource = new Resource();
         BeanUtils.copyProperties(dto, resource);
@@ -121,7 +122,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_RESOURCE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_RESOURCE, allEntries = true)
     public Boolean updateResource(Long id, ResourceDTO dto) {
         Resource resource = resourceMapper.selectById(id);
         if (resource == null || resource.getIsDeleted() == 1) {
@@ -135,7 +136,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_RESOURCE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_RESOURCE, allEntries = true)
     public Boolean deleteResource(Long id) {
         Resource resource = resourceMapper.selectById(id);
         if (resource == null || resource.getIsDeleted() == 1) {
@@ -147,7 +148,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_RESOURCE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_RESOURCE, allEntries = true)
     public Boolean updateEnabled(Long id, Boolean enabled) {
         Resource resource = resourceMapper.selectById(id);
         if (resource == null || resource.getIsDeleted() == 1) {

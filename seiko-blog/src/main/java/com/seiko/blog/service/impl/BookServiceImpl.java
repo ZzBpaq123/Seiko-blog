@@ -2,6 +2,7 @@ package com.seiko.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.dto.BookDTO;
@@ -32,7 +33,7 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_BOOK, key = "'all'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_BOOK, key = "'all'")
     public List<BookVO> getBookList() {
         return bookMapper.selectList(
                 new LambdaQueryWrapper<Book>()
@@ -73,7 +74,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_BOOK, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_BOOK, allEntries = true)
     public Long createBook(BookDTO dto) {
         Book book = new Book();
         BeanUtils.copyProperties(dto, book);
@@ -83,7 +84,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_BOOK, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_BOOK, allEntries = true)
     public Boolean updateBook(Long id, BookDTO dto) {
         Book book = bookMapper.selectById(id);
         if (book == null || book.getIsDeleted() == 1) {
@@ -97,7 +98,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_BOOK, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_BOOK, allEntries = true)
     public Boolean deleteBook(Long id) {
         Book book = bookMapper.selectById(id);
         if (book == null || book.getIsDeleted() == 1) {

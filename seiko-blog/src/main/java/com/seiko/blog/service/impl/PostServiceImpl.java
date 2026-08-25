@@ -3,6 +3,7 @@ package com.seiko.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -50,7 +51,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_POST, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_POST, allEntries = true)
     public Long createPost(PostDTO dto) {
         // 构建文章实体
         Post post = new Post();
@@ -82,7 +83,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_POST, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_POST, allEntries = true)
     public Boolean deletePost(Long id) {
         Post post = this.getById(id);
         if (post == null) {
@@ -98,7 +99,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_POST, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_POST, allEntries = true)
     public Boolean updatePost(Long id, PostDTO dto) {
         Post post = this.getById(id);
         if (post == null) {
@@ -179,7 +180,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_POST,
+    @Cacheable(cacheNames = RedisConstant.CACHE_POST,
             key = "'list:' + #page + ':' + #size",
             condition = "#published == true and (#title == null or #title.isBlank()) and (#tag == null or #tag.isBlank())")
     public Page<PostVO> getPostList(long page, long size, Boolean published, String title, String tag) {
@@ -253,7 +254,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_POST, key = "'slug:' + #slug", unless = "#result == null")
+    @Cacheable(cacheNames = RedisConstant.CACHE_POST, key = "'slug:' + #slug", unless = "#result == null")
     public PostVO getPostBySlug(String slug) {
         LambdaQueryWrapper<Post> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Post::getSlug, slug);
@@ -283,7 +284,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_POST, key = "'tags'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_POST, key = "'tags'")
     public List<String> getAllTags() {
         return tagMapper.selectList(null)
                 .stream()
@@ -305,7 +306,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_POST, key = "'tagCounts'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_POST, key = "'tagCounts'")
     public List<TagCountVO> getTagCounts() {
         // 查询已发布文章总数
         LambdaQueryWrapper<Post> totalWrapper = new LambdaQueryWrapper<>();

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.seiko.common.annotation.OperationLog;
+import com.seiko.common.constant.LogConstant;
 import com.seiko.common.log.LogContext;
 import com.seiko.common.result.Result;
 import com.seiko.blog.entity.Log;
@@ -41,31 +42,6 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class OperationLogAspect {
-
-    /**
-     * 操作状态：正常
-     */
-    private static final int STATUS_SUCCESS = 0;
-
-    /**
-     * 操作状态：异常
-     */
-    private static final int STATUS_FAIL = 1;
-
-    /**
-     * 默认排除的敏感字段
-     */
-    private static final String[] DEFAULT_EXCLUDE_PARAMS = {
-            "password", "oldPassword", "newPassword", "confirmPassword",
-            "accessToken", "refreshToken", "token", "secret"
-    };
-
-    /**
-     * 日志字段最大保存长度
-     */
-    private static final int MAX_LOG_LENGTH = 2000;
-
-    private static final String MASK = "******";
 
     private final AsyncLogTask asyncLogTask;
 
@@ -146,7 +122,7 @@ public class OperationLogAspect {
                 failed = true;
             }
             entity.setResponseCode(responseCode);
-            entity.setStatus(failed ? STATUS_FAIL : STATUS_SUCCESS);
+            entity.setStatus(failed ? LogConstant.STATUS_FAIL : LogConstant.STATUS_SUCCESS);
             if (failed) {
                 entity.setLogLevel("ERROR");
                 entity.setErrorMessage(truncate(extractErrorMessage(throwable, result)));
@@ -300,7 +276,7 @@ public class OperationLogAspect {
      * 拼接默认敏感字段与注解自定义排除字段
      */
     private Set<String> buildExcludes(String[] extra) {
-        Set<String> excludes = new HashSet<>(Arrays.asList(DEFAULT_EXCLUDE_PARAMS));
+        Set<String> excludes = new HashSet<>(Arrays.asList(LogConstant.DEFAULT_EXCLUDE_PARAMS));
         if (extra != null) {
             excludes.addAll(Arrays.asList(extra));
         }
@@ -348,7 +324,7 @@ public class OperationLogAspect {
             int idx = pair.indexOf('=');
             String key = idx > 0 ? pair.substring(0, idx) : pair;
             if (excludes.contains(key)) {
-                masked.append(key).append('=').append(MASK);
+                masked.append(key).append('=').append(LogConstant.MASK);
             } else {
                 masked.append(pair);
             }
@@ -370,10 +346,10 @@ public class OperationLogAspect {
      * 截断超长字段，避免日志表存储过大数据
      */
     private String truncate(String value) {
-        if (value == null || value.length() <= MAX_LOG_LENGTH) {
+        if (value == null || value.length() <= LogConstant.MAX_LOG_LENGTH) {
             return value;
         }
-        return value.substring(0, MAX_LOG_LENGTH);
+        return value.substring(0, LogConstant.MAX_LOG_LENGTH);
     }
 
     /**

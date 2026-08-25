@@ -2,6 +2,7 @@ package com.seiko.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.config.RedisCacheConfig;
@@ -34,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     private final VerificationCodeService verificationCodeService;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_COMMENT, key = "'all'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_COMMENT, key = "'all'")
     public List<CommentVO> getCommentList() {
         return commentMapper.selectList(
                 new LambdaQueryWrapper<Comment>()
@@ -65,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_COMMENT, key = "'id:' + #id", unless = "#result == null")
+    @Cacheable(cacheNames = RedisConstant.CACHE_COMMENT, key = "'id:' + #id", unless = "#result == null")
     public CommentVO getCommentById(Long id) {
         Comment comment = commentMapper.selectById(id);
         if (comment == null || comment.getIsDeleted() == 1) {
@@ -76,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_COMMENT, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_COMMENT, allEntries = true)
     public CommentVO createComment(CommentDTO commentDTO) {
         boolean verified = verificationCodeService.verify(
                 commentDTO.getUserEmail(), commentDTO.getCode());
@@ -93,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_COMMENT, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_COMMENT, allEntries = true)
     public void deleteComment(Long id) {
         Comment comment = commentMapper.selectById(id);
         if (comment == null || comment.getIsDeleted() == 1) {
@@ -105,7 +106,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_COMMENT, key = "'post:' + #postId")
+    @Cacheable(cacheNames = RedisConstant.CACHE_COMMENT, key = "'post:' + #postId")
     public List<CommentVO> getCommentListByPostId(Long postId) {
         return commentMapper.selectList(
                 new LambdaQueryWrapper<Comment>()

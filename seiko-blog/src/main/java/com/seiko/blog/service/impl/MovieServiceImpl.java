@@ -2,6 +2,7 @@ package com.seiko.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.seiko.common.constant.RedisConstant;
 import com.seiko.common.exception.BusinessException;
 import com.seiko.common.result.ResultCode;
 import com.seiko.blog.dto.MovieDTO;
@@ -32,7 +33,7 @@ public class MovieServiceImpl implements MovieService {
     private final MovieMapper movieMapper;
 
     @Override
-    @Cacheable(cacheNames = RedisCacheConfig.CACHE_MOVIE, key = "'all'")
+    @Cacheable(cacheNames = RedisConstant.CACHE_MOVIE, key = "'all'")
     public List<MovieVO> getMovieList() {
         return movieMapper.selectList(
                 new LambdaQueryWrapper<Movie>()
@@ -74,7 +75,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_MOVIE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_MOVIE, allEntries = true)
     public Long createMovie(MovieDTO dto) {
         Movie movie = new Movie();
         BeanUtils.copyProperties(dto, movie);
@@ -84,7 +85,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_MOVIE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_MOVIE, allEntries = true)
     public Boolean updateMovie(Long id, MovieDTO dto) {
         Movie movie = movieMapper.selectById(id);
         if (movie == null || movie.getIsDeleted() == 1) {
@@ -98,7 +99,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_MOVIE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_MOVIE, allEntries = true)
     public Boolean deleteMovie(Long id) {
         Movie movie = movieMapper.selectById(id);
         if (movie == null || movie.getIsDeleted() == 1) {
@@ -110,7 +111,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = RedisCacheConfig.CACHE_MOVIE, allEntries = true)
+    @CacheEvict(cacheNames = RedisConstant.CACHE_MOVIE, allEntries = true)
     public Boolean updateTopStatus(Long id, Integer isTop) {
         Movie movie = movieMapper.selectById(id);
         if (movie == null || movie.getIsDeleted() == 1) {

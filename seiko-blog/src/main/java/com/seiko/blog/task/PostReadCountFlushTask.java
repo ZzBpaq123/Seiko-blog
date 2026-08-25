@@ -6,6 +6,7 @@ import com.seiko.blog.config.RedisCacheConfig;
 import com.seiko.blog.entity.Post;
 import com.seiko.blog.mapper.PostMapper;
 import com.seiko.blog.service.impl.PostServiceImpl;
+import com.seiko.common.constant.RedisConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -93,7 +94,7 @@ public class PostReadCountFlushTask {
         List<Post> posts = postMapper.selectList(new LambdaQueryWrapper<Post>()
                 .select(Post::getId, Post::getSlug)
                 .in(Post::getId, postIds));
-        Cache cache = cacheManager.getCache(RedisCacheConfig.CACHE_POST);
+        Cache cache = cacheManager.getCache(RedisConstant.CACHE_POST);
         if (cache == null) {
             return;
         }
