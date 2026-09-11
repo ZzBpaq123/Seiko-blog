@@ -3,7 +3,6 @@
 import Image from "next/image";
 import {BookOpen, FileText, FlaskConical, Globe, Map} from "lucide-react";
 import type {Game} from "@/data/games";
-import {surfaceColors} from "@/data/games";
 
 interface GameClientProps {
   initialGames: Game[];
@@ -53,7 +52,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
           </div>
 
           {/* Content Section */}
-          <div className={`flex-1 p-3 md:p-6 ${surfaceColors[index % 2]}`}>
+          <div className="flex-1 p-3 md:p-6 bg-game-bg">
             <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8">
               {/* Left Column - Content */}
               <div className="col-span-12 lg:col-span-8">
@@ -62,7 +61,7 @@ export default function GameClient({ initialGames }: GameClientProps) {
                   <div
                     className="p-6 md:p-8 rounded-xl border-l-2"
                     style={{
-                      backgroundColor: index % 2 === 0 ? "#f2f0ec" : "#ffffff",
+                      backgroundColor: "#ffffff",
                       borderColor: game.accentColor,
                     }}
                   >

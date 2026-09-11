@@ -110,7 +110,4 @@ export const games: Game[] = [
     },
 ];
 
-export const surfaceColors = [
-    "bg-game-surface", // surface-container-low for odd
-    "bg-game-bg",      // surface for even
-];
+

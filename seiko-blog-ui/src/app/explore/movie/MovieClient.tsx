@@ -99,6 +99,9 @@ export default function MovieClient({ initialMovies }: MovieClientProps) {
           {/* 顶部暗色渐变，保证白色 Header 可读 */}
           <div className="absolute inset-0 z-10 bg-linear-to-b from-black/70 via-transparent to-transparent" />
 
+          {/* 底部浅色渐变，保证轮播文字可读 */}
+          <div className="absolute inset-0 z-10 bg-linear-to-t from-movie-bg/90 via-movie-bg/40 to-transparent" />
+
           {/* 轮播内容 */}
           <div className="absolute inset-0 z-20 flex items-end">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
@@ -109,7 +112,7 @@ export default function MovieClient({ initialMovies }: MovieClientProps) {
                 <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4">
                   {currentHero.movieName}
                 </h2>
-                <div className="flex flex-wrap items-center gap-2 text-sm md:text-base text-movie-muted mb-3 md:mb-4">
+                <div className="flex flex-wrap items-center gap-2 text-sm md:text-base text-movie-text/90 mb-3 md:mb-4">
                   <span className="flex items-center gap-1 text-movie-accent">
                     <Star className="w-4 h-4 fill-current" />
                     {currentHero.rating.toFixed(1)}
@@ -125,7 +128,7 @@ export default function MovieClient({ initialMovies }: MovieClientProps) {
                     </>
                   ) : null}
                 </div>
-                <p className="text-sm md:text-lg text-movie-muted/80 line-clamp-3 md:line-clamp-4 mb-5 md:mb-6 leading-relaxed">
+                <p className="text-sm md:text-lg text-movie-text/80 line-clamp-3 md:line-clamp-4 mb-5 md:mb-6 leading-relaxed">
                   {currentHero.synopsis}
                 </p>
                 <button

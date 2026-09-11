@@ -98,7 +98,7 @@ export default function Header({ overlayMode = false }: HeaderProps) {
     if (isDarkHeroPage) {
       if (isScrolled)
         return `${base} ${active ? "text-zinc-900 bg-zinc-100/50" : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/30"}`;
-      return `${base} ${active ? "text-zinc-900 bg-white/20" : "text-white hover:text-white hover:bg-white/10"}`;
+      return `${base} ${active ? "text-white underline decoration-2 underline-offset-4" : "text-white/90 hover:text-white hover:bg-white/10"}`;
     }
 
     const textColor = pageStyle.text.includes("dark:")
@@ -333,7 +333,7 @@ export default function Header({ overlayMode = false }: HeaderProps) {
                             className={getDropdownItemClass(child.href)}
                             onClick={() => setOpenDropdown(null)}
                           >
-                            <span className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-2">
                               {child.icon}
                               {child.label}
                             </span>
