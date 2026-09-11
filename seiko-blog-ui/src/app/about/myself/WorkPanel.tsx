@@ -73,7 +73,7 @@ export default function WorkPanel() {
       zoom: 11,
       center: SHIJIAZHUANG,
       viewMode: "3D",
-      mapStyle: "amap://styles/dark",
+      mapStyle: "amap://styles/whitesmoke",
     });
     mapInstanceRef.current = map;
 
@@ -157,12 +157,12 @@ export default function WorkPanel() {
   return (
     <section className="flex h-full w-screen shrink-0 flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-5xl mx-auto">
-        <h2 className="mb-6 font-bold text-white text-3xl sm:text-4xl">
+        <h2 className="mb-6 font-bold text-stone-900 text-3xl sm:text-4xl">
           我的工作地
         </h2>
 
         <div className="mb-6 space-y-3">
-          <p className="text-lg leading-relaxed text-gray-300 sm:text-xl">
+          <p className="text-lg leading-relaxed text-stone-600 sm:text-xl">
             目前我在{" "}
             <span className="font-semibold text-blue-400">河北 石家庄</span>{" "}
             从事{" "}
@@ -172,7 +172,7 @@ export default function WorkPanel() {
         </div>
 
         {/* 小地图 - 定位到石家庄 */}
-        <div className="overflow-hidden rounded-2xl border border-white/10 shadow-[0_0_40px_rgba(59,130,246,0.15)]">
+        <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-[0_0_40px_rgba(59,130,246,0.15)]">
           <div ref={mapRef} className="h-70 w-full sm:h-90" />
         </div>
       </div>

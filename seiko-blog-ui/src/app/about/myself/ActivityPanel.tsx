@@ -5,11 +5,11 @@ import { useMemo } from "react";
 const WEEKS = 52;
 const DAYS = 7;
 const LEVELS = [
-  "bg-zinc-800",
-  "bg-emerald-900",
+  "bg-stone-200",
+  "bg-emerald-200",
+  "bg-emerald-400",
+  "bg-emerald-600",
   "bg-emerald-700",
-  "bg-emerald-500",
-  "bg-emerald-300",
 ];
 
 const WEEKDAY_LABELS = ["星期一", "", "", "星期四", "", "", "星期日"];
@@ -88,14 +88,14 @@ export default function ActivityPanel() {
   return (
     <section className="flex h-full w-screen shrink-0 flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-7xl mx-auto">
-        <h2 className="mb-4 text-center font-bold text-white text-3xl sm:text-4xl">
+        <h2 className="mb-4 text-center font-bold text-stone-900 text-3xl sm:text-4xl">
           活跃度
         </h2>
 
-        <div className="rounded-2xl border border-white/5 bg-white/2 p-6 sm:p-8">
+        <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8">
           <div className="overflow-x-auto">
             <div className="min-w-fit">
-              <div className="mb-3 flex justify-between pl-14 text-sm text-gray-500">
+              <div className="mb-3 flex justify-between pl-14 text-sm text-stone-400">
                 {months.map((m, i) => (
                   <span
                     key={i}
@@ -113,7 +113,7 @@ export default function ActivityPanel() {
               </div>
 
               <div className="flex gap-2">
-                <div className="flex w-12 flex-col gap-1 text-sm text-gray-500">
+                <div className="flex w-12 flex-col gap-1 text-sm text-stone-400">
                   {WEEKDAY_LABELS.map((day, i) => (
                     <div
                       key={i}

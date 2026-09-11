@@ -67,9 +67,9 @@ export const pageHeaderStyles: Record<
     text: "text-rose-900 dark:text-rose-100",
   },
   "/about/myself": {
-    bg: "bg-zinc-950/80 backdrop-blur-md",
-    scrolledBg: "bg-zinc-950/95 backdrop-blur-md shadow-lg",
-    text: "text-zinc-100",
+    bg: "bg-[#f8f7f5]/80 backdrop-blur-md",
+    scrolledBg: "bg-[#f8f7f5]/95 backdrop-blur-md shadow-sm",
+    text: "text-stone-800",
   },
 };
 
@@ -130,9 +130,9 @@ export const pageFooterStyles: Record<
   },
   // 关于我页
   "/about/myself": {
-    bg: "bg-zinc-950",
-    border: "border-zinc-800",
-    text: "text-zinc-400",
+    bg: "bg-[#f8f7f5]",
+    border: "border-stone-200",
+    text: "text-stone-500",
   },
 };
 

@@ -72,7 +72,7 @@ export default function MyselfClient() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[calc(100dvh-12.8vh)] w-full overflow-hidden -mt-14 pt-14 -mb-16 pb-16 bg-zinc-950"
+      className="relative h-[calc(100dvh-12.8vh)] w-full overflow-hidden -mt-14 pt-14 -mb-16 pb-16 bg-[#f8f7f5]"
     >
       {/* 顶部光线效果层 */}
       <div className="absolute inset-0 z-20 pointer-events-none bg-linear-to-b from-blue-500/5 via-transparent to-transparent" />
@@ -97,7 +97,7 @@ export default function MyselfClient() {
             className={`h-2.5 w-2.5 rounded-full transition-all sm:h-3 sm:w-3 ${
               i === currentIndex
                 ? "bg-blue-500 scale-125"
-                : "bg-white/20 hover:bg-white/40"
+                : "bg-stone-900/20 hover:bg-stone-900/40"
             }`}
             aria-label={`切换到第 ${i + 1} 屏`}
           />
