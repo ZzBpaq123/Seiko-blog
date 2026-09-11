@@ -61,11 +61,6 @@ export const pageHeaderStyles: Record<
     text: "text-stone-800",
   },
   // 关于页
-  "/about": {
-    bg: "bg-rose-50/80 backdrop-blur-md dark:bg-rose-950/30",
-    scrolledBg: "bg-rose-50/95 backdrop-blur-md shadow-sm dark:bg-rose-950/50",
-    text: "text-rose-900 dark:text-rose-100",
-  },
   "/about/myself": {
     bg: "bg-[#f8f7f5]/80 backdrop-blur-md",
     scrolledBg: "bg-[#f8f7f5]/95 backdrop-blur-md shadow-sm",

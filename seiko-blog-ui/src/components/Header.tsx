@@ -14,7 +14,6 @@ import {
   Gamepad2,
   Link2,
   CircleAlert,
-  User,
   ChevronDown,
   Menu,
   X,
@@ -152,19 +151,7 @@ export default function Header({ overlayMode = false }: HeaderProps) {
         },
       ],
     },
-    {
-      href: "/about",
-      label: "关于",
-      icon: <CircleAlert className="w-6 h-6" />,
-      children: [
-        {
-          href: "/about/myself",
-          label: "介绍",
-          icon: <User className="w-5 h-5" />,
-        },
-        // { href: "/friends", label: "友链", icon: <Handshake className="w-5 h-5" /> },
-      ],
-    },
+    { href: "/about/myself", label: "关于", icon: <CircleAlert className="w-6 h-6" /> },
   ];
 
   useEffect(() => {
